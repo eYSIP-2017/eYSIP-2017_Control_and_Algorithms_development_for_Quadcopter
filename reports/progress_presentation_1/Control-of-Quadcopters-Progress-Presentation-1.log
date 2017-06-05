@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.6.5)  5 JUN 2017 17:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.6.5)  5 JUN 2017 18:30
 entering extended mode
 **./Control-of-Quadcopters-Progress-Presentation-1.tex
 (Control-of-Quadcopters-Progress-Presentation-1.tex
@@ -664,8 +664,7 @@ le.sty")
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\themes\color\beamercolorthemeorc
 hid.sty"))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\themes\color\beamercolorthemesid
-ebartab.sty")
-No file Control-of-Quadcopters-Progress-Presentation-1.aux.
+ebartab.sty") (Control-of-Quadcopters-Progress-Presentation-1.aux)
 \openout1 = `Control-of-Quadcopters-Progress-Presentation-1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -682,6 +681,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
 LaTeX Font Info:    ... okay on input line 8.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 8.
 LaTeX Font Info:    ... okay on input line 8.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -757,6 +757,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
+
+(Control-of-Quadcopters-Progress-Presentation-1.out)
+(Control-of-Quadcopters-Progress-Presentation-1.out)
 \@outlinefile=\write5
 \openout5 = `Control-of-Quadcopters-Progress-Presentation-1.out'.
 
@@ -839,7 +842,7 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 LaTeX Info: Redefining \includegraphics on input line 8.
 
-No file Control-of-Quadcopters-Progress-Presentation-1.nav.
+(Control-of-Quadcopters-Progress-Presentation-1.nav)
 
 Package hyperref Warning: Option `pdfauthor' has already been used,
 (hyperref)                setting the option has no effect on input line 13.
@@ -869,7 +872,13 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2
 
 ]
-Overfull \vbox (18.35338pt too high) detected at line 36
+Underfull \hbox (badness 2426) in paragraph at lines 45--45
+[]\OT1/cmss/m/n/10 Wireless joy-stick con-trol (us-ing Node
+ []
+
+
+Overfull \hbox (1.0089pt too wide) in paragraph at lines 45--45
+[][]  
  []
 
 [3
@@ -882,37 +891,39 @@ Overfull \vbox (18.35338pt too high) detected at line 36
 
 ] [7
 
-] <images/raw.png, id=204, 362.10281pt x 393.72093pt>
+] [8
+
+] <images/raw.png, id=298, 362.10281pt x 393.72093pt>
 File: images/raw.png Graphic file (type png)
 
 <use images/raw.png>
-Package pdftex.def Info: images/raw.png used on input line 68.
+Package pdftex.def Info: images/raw.png used on input line 109.
 (pdftex.def)             Requested size: 162.94475pt x 177.17278pt.
- [8
+ [9
 
  <./images/raw.png>]
-<images/offset.png, id=233, 378.66469pt x 401.24907pt>
+<images/offset.png, id=333, 378.66469pt x 401.24907pt>
 File: images/offset.png Graphic file (type png)
  <use images/offset.png>
-Package pdftex.def Info: images/offset.png used on input line 75.
+Package pdftex.def Info: images/offset.png used on input line 116.
 (pdftex.def)             Requested size: 170.39752pt x 180.56041pt.
-
-[9
-
- <./images/offset.png>]
-<images/scaled.png, id=261, 362.10281pt x 416.30531pt>
-File: images/scaled.png Graphic file (type png)
- <use images/scaled.png>
-Package pdftex.def Info: images/scaled.png used on input line 82.
-(pdftex.def)             Requested size: 162.94475pt x 187.33565pt.
 
 [10
 
- <./images/scaled.png>] [11
+ <./images/offset.png>]
+<images/scaled.png, id=366, 362.10281pt x 416.30531pt>
+File: images/scaled.png Graphic file (type png)
+ <use images/scaled.png>
+Package pdftex.def Info: images/scaled.png used on input line 123.
+(pdftex.def)             Requested size: 162.94475pt x 187.33565pt.
 
-] [12
+[11
+
+ <./images/scaled.png>] [12
 
 ] [13
+
+] [14
 
 ]
 \tf@nav=\write6
@@ -924,46 +935,39 @@ Package pdftex.def Info: images/scaled.png used on input line 82.
 \tf@snm=\write8
 \openout8 = `Control-of-Quadcopters-Progress-Presentation-1.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 108.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 108.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 149.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 149.
 
 (Control-of-Quadcopters-Progress-Presentation-1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 108.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 108.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 149.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 149.
+Package rerunfilecheck Info: File `Control-of-Quadcopters-Progress-Presentation
+-1.out' has not changed.
+(rerunfilecheck)             Checksum: 2C0F1EF650D4E0CB21DC1E04020F68A6;305.
 
-
-Package rerunfilecheck Warning: File `Control-of-Quadcopters-Progress-Presentat
-ion-1.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Control-of-Quadcopters-Progress-Pre
-sentation-1.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  2C0F1EF650D4E0CB21DC1E04020F68A6;305.
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 17049 strings out of 493323
- 326655 string characters out of 3139058
- 396622 words of memory out of 3000000
- 20161 multiletter control sequences out of 15000+200000
+ 17128 strings out of 493323
+ 327891 string characters out of 3139058
+ 401882 words of memory out of 3000000
+ 20230 multiletter control sequences out of 15000+200000
  8335 words of font info for 31 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,16n,55p,814b,557s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,17n,55p,814b,557s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files/MiKTe
 X 2.9/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
 pe1/public/amsfonts/cm/cmsy5.pfb>
-Output written on Control-of-Quadcopters-Progress-Presentation-1.pdf (13 pages,
- 545810 bytes).
+Output written on Control-of-Quadcopters-Progress-Presentation-1.pdf (14 pages,
+ 571018 bytes).
 PDF statistics:
- 399 PDF objects out of 1000 (max. 8388607)
- 33 named destinations out of 1000 (max. 500000)
- 58 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 522 PDF objects out of 1000 (max. 8388607)
+ 35 named destinations out of 1000 (max. 500000)
+ 106 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,6 +1,6 @@
 \beamer@sectionintoc {1}{Overview of Project}{2}{0}{1}
 \beamer@sectionintoc {2}{Overview of Task}{3}{0}{2}
 \beamer@sectionintoc {3}{Task Accomplished}{4}{0}{3}
-\beamer@sectionintoc {4}{Challenges Faced}{11}{0}{4}
-\beamer@sectionintoc {5}{Future Plans}{12}{0}{5}
-\beamer@sectionintoc {6}{Thank You}{13}{0}{6}
+\beamer@sectionintoc {4}{Challenges Faced}{12}{0}{4}
+\beamer@sectionintoc {5}{Future Plans}{13}{0}{5}
+\beamer@sectionintoc {6}{Thank You}{14}{0}{6}

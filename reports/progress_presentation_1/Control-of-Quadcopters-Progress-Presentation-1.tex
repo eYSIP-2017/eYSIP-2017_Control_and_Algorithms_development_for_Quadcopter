@@ -21,43 +21,84 @@
 \begin{frame}{Overview of Project}
 \bfseries Control and Algorithms Development for Quadcopters \\
 \hfill \break
-\mdseries The project deals with the study of control algorithms for quadcopter. The goal is to develop custom firmware for quadcopter (or flight controller) for 32-bit microcontrollers such as the CleanFlight firmware on STM32F1xx (ARM Cortex-M3 core). The flight controller is designed to control parameters such as the throttle, yaw, pitch and roll and to develop algorithms considering various motion and dynamics. The next step is to analyse the control algorithm to identify effects of various parameters and to optimize it for stable motion. The final step is to develop a wireless joystick controller for simple maneuvering of the quadcopter. 	
+\mdseries 
+\begin{itemize}
+\item To develop custom firmware for quadcopter for 32-bit microcontrollers on STM32F1xx (ARM Cortex-M3 core).\\
+\item Control parameters such as the throttle, yaw, pitch and roll and to develop algorithms considering various motion and dynamics.\\
+\item To analyse the control algorithm to identify effects of various parameters and to optimize it for stable motion.\\
+\item Develop a wireless joystick controller for maneuvering of the quadcopter. 
+\end{itemize}
 \end{frame}
 
 \section{Overview of Task}
 \begin{frame}{Overview of Task}
-\bfseries Task 1\\ \mdseries Study of datasheet and user guide of Pluto Drone.\\ \hfill \break
-\bfseries Task 2\\ \mdseries Installation and Setup of IDE and tools.\\ \hfill \break
-\bfseries Task 3\\ \mdseries Libraries development for GPIO, Timers, PWM, UART, I2C interface.\\
-Interfacing IMU to obtain filtered pitch, roll and yaw angles.\\ \hfill \break
-\bfseries Task 4\\ \mdseries Code development for control of quadcopter for stable flight.\\ \hfill \break
-\bfseries Task 5\\ \mdseries Wireless joystick control (using Node MCU).\\ \hfill \break
-\bfseries Task 6\\ \mdseries Documentation for testing and debugging the drone.\\ \hfill \break
+\begin{tabular}{|l|p{0.6\linewidth}|p{0.15\linewidth}|} 
+\hline
+Task No. & Task & Deadline\\ \hline
+1 & Study of datasheet and user guide of Pluto Drone. & 2 days\\ \hline
+2 & Installation and Setup of IDE and tools. & 1 day\\ \hline
+3 & Libraries development for GPIO, Timers, PWM, UART, I2C interface. Interfacing IMU to obtain filtered pitch, roll and yaw angles. & 3+4 days\\ \hline
+4 & Code development for control of quadcopter for stable flight. & 12 days\\ \hline
+5 & Wireless joystick control (using Node MCU). & 6 days\\ \hline
+6 & Documentation for testing and debugging the drone. & 6 days\\ \hline
+\end{tabular}
 \end{frame}
 
 \section{Task Accomplished}
 \begin{frame}{Task Accomplished}
 \bfseries Task 1\\ Study of datasheet and user guide of Pluto Drone\\ \hfill \break
-\mdseries A brief study on the ARM Cortex-M3 architecture was done to understand how the various peripherals (such as the timers, GPIO ports, I2C ports) have been interfaced the APB (Advanced Peripheral Bus) of the STM32F10xx. Study of the clock distribution (RCC) and configuration of various clock sources.\hfill \break
-
-Brief study of existing flight controllers such as CleanFlight  and Naze32 for 32-bit micro-controllers.
+\mdseries 
+\begin{itemize}
+\item Brief study on the ARM Cortex-M3 architecture to understand how the various peripherals (such as the timers, GPIO ports, I2C ports) have been interfaced the APB.\\ 
+\item Study of the clock distribution (RCC) and configuration of various clock sources.\\
+\item Brief study of existing flight controllers such as CleanFlight  and Naze32 for 32-bit micro-controllers.
+\end{itemize}	
 \end{frame}
 
 \begin{frame}{Task Accomplished}
 \bfseries Task 2\\ Installation and Setup of IDE and tools\\ \hfill \break
-\mdseries Successfully installed TrueSTUDIO IDE, GNU ARM Tool-chain, Windows Build Tools, OpenOCD, Device Packs and Drivers for STM32F10xx. Hardware debugging was successfully completed.
+\mdseries 
+\begin{itemize}
+\item Successfully installed TrueSTUDIO IDE, GNU ARM Tool-chain, Windows Build Tools, OpenOCD, Device Packs and Drivers for STM32F10xx.\\
+\item Hardware debugging was successfully completed.
+\end{itemize}	
 \end{frame}
 
 \begin{frame}{Task Accomplished}
-\bfseries Task 3\\ Libraries development for GPIO, Timers, PWM, UART, I2C interface\\ \hfill \break
-\mdseries Developed libraries for GPIO pin control, configured timers for PWM control of motors, serial communication over UART was successfully achieved for various data types, I2C port was configured and setup for sensor interfacing, with the help HAL drivers.\hfill \break
-
-MPU9250 Accelerometer and Gyroscope was interfaced and libraries were developed for the same. AK8963 Magnetometer was also interfaced. Raw data was successfully obtained and a complimentary filter was implemented to find pitch and roll angles. Finding the yaw angle required a more complex algorithm and this was achieved using Madgwick's AHRS filter. However, the angles obtained are not yet accurate due to certain problems with Accelerometer interfacing.
+\bfseries Task 3\\ Libraries development for GPIO, Timers, PWM, UART, I2C interface\\
+\mdseries 
+\begin{itemize} 
+\item Developed libraries for GPIO pin control.\\
+\item Configured timers for PWM control of motors.\\
+\item Serial communication over UART for various data types.\\
+\item I2C port was configured for sensor interfacing.\\
+\item MPU9250 Accelerometer and Gyroscope was interfaced.\\ 
+\item AK8963 Magnetometer was also interfaced.\\ 
+\item Finding the yaw angle required a more complex algorithm and this was achieved using Madgwick's AHRS filter. 
+\item However, the angles obtained are not yet accurate due to certain problems with Accelerometer interfacing.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Task Accomplished}
 \bfseries Sensor Calibration and Data Visualization\\ \hfill \break
-\mdseries The MPU9250 and AK8963 sensors were calibrated for offsets. The calibrated data was visualized using Python. Currently working on real time data visualization using Python. Successfully implemented data frame transmission with checksum. Process of plotting the real time data and development of a GUI is ongoing.
+\mdseries 
+\begin{itemize} 
+\item The MPU9250 and AK8963 sensors were calibrated for offsets. 
+\item The calibrated data was visualized using Python. 
+\item Currently working on real time data visualization using Python. Successfully implemented data frame transmission with checksum. 
+\item Process of plotting the real time data and development of a GUI is ongoing.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Task Accomplished}
+\bfseries Calibration Process\\ \hfill \break
+\mdseries 
+\begin{itemize} 
+\item Around 6,000 raw data samples were recorded.
+\item Average offset value was calculated as (MAX + MIN)/2 for all axes.
+\item Scaling factor was calculated as (MAX - MIN)/2 and then normalized.
+\item 3D scatter plots for all axes were visualized in Python.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Task Accomplished}
