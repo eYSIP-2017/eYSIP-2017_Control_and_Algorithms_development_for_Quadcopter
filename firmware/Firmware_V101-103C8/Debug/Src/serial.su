@@ -1,0 +1,8 @@
+serial.c:20:6:serialWrite	8	static
+serial.c:27:6:serialWriteBytes	8	static
+serial.c:34:6:serialLine	8	static
+serial.c:41:6:serialPrint	8	static
+serial.c:48:6:serialInt	8	static
+serial.c:55:6:serialFloat	24	static
+serial.c:71:15:serialRead	8	static
+serial.c:82:15:serialReadBytes	16	static

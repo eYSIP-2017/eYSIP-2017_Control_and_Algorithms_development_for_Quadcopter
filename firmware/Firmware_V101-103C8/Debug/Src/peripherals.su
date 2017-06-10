@@ -1,0 +1,4 @@
+peripherals.c:404:6:_Error_Handler.constprop	8	static
+peripherals.c:44:6:SystemClock_Config	72	static
+peripherals.c:382:6:Peripherals_Init	208	static
+peripherals.c:404:6:_Error_Handler	8	static

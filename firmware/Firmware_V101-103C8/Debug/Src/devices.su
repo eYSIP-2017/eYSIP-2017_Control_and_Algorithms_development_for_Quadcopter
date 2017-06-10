@@ -1,0 +1,10 @@
+devices.c:19:6:toggleLED	0	static
+devices.c:27:6:LED_StartupSequence	16	static
+devices.c:50:6:Motor1_SetPWM	0	static
+devices.c:62:6:Motor2_SetPWM	0	static
+devices.c:74:6:Motor3_SetPWM	0	static
+devices.c:86:6:Motor4_SetPWM	0	static
+devices.c:98:6:Motor5_SetPWM	0	static
+devices.c:110:6:Motor6_SetPWM	0	static
+devices.c:128:6:PWM_Init	8	static
+devices.c:148:6:Devices_Init	8	static
