@@ -1,0 +1,36 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}
+\contentsline {section}{\numberline {1.1}Abstract}{4}{section.1.1}
+\contentsline {section}{\numberline {1.2}Completion Status}{4}{section.1.2}
+\contentsline {chapter}{\numberline {2}Hardware}{6}{chapter.2}
+\contentsline {section}{\numberline {2.1}List of Hardware Components}{6}{section.2.1}
+\contentsline {section}{\numberline {2.2}STM32 Micro-controller}{7}{section.2.2}
+\contentsline {section}{\numberline {2.3}Hardware Schematic}{7}{section.2.3}
+\contentsline {chapter}{\numberline {3}Software}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Installation of Softwares and Tools}{9}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Integrated Development Environment (IDE)}{9}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Debugging Tools}{10}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Flashing the Program}{10}{subsection.3.1.3}
+\contentsline {section}{\numberline {3.2}Programming the STM32 Micro-controller}{11}{section.3.2}
+\contentsline {chapter}{\numberline {4}Flight Controller Firmware}{12}{chapter.4}
+\contentsline {section}{\numberline {4.1}Structural Overview}{12}{section.4.1}
+\contentsline {section}{\numberline {4.2}Board Specific Package (BSP)}{14}{section.4.2}
+\contentsline {section}{\numberline {4.3}Attitude and Heading Reference System}{15}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}MPU9250 Accelerometer and Gyroscope}{16}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}AK8963 Magnetometer}{18}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}Sensor Fusion using Madgwick's AHRS Filter}{21}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}Altitude Measurement}{22}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}MS5611 Barometer}{22}{subsection.4.4.1}
+\contentsline {section}{\numberline {4.5}Communication and Telemetry}{23}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}MultiWii Serial Protocol}{23}{subsection.4.5.1}
+\contentsline {section}{\numberline {4.6}Control Algorithm}{25}{section.4.6}
+\contentsline {section}{\numberline {4.7}Motor Operation}{27}{section.4.7}
+\contentsline {section}{\numberline {4.8}Wireless Joystick Controller}{30}{section.4.8}
+\contentsline {chapter}{\numberline {5}Usage and Demonstration}{31}{chapter.5}
+\contentsline {section}{\numberline {5.1}Firmware Usage}{31}{section.5.1}
+\contentsline {section}{\numberline {5.2}Wireless Joystick Controller}{31}{section.5.2}
+\contentsline {section}{\numberline {5.3}Results and Demonstration}{31}{section.5.3}
+\contentsline {chapter}{\numberline {6}Future Work}{32}{chapter.6}
+\contentsline {chapter}{\numberline {7}Bug Report and Challenges}{34}{chapter.7}
+\contentsline {chapter}{References}{35}{chapter*.3}
+\contentsline {chapter}{Appendix A: Circular Buffer}{36}{chapter*.4}
