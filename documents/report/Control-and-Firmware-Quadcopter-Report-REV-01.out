@@ -27,9 +27,13 @@
 \BOOKMARK [1][-]{section.4.8}{Wireless Joystick Controller}{chapter.4}% 27
 \BOOKMARK [0][-]{chapter.5}{Usage and Demonstration}{}% 28
 \BOOKMARK [1][-]{section.5.1}{Firmware Usage}{chapter.5}% 29
-\BOOKMARK [1][-]{section.5.2}{Wireless Joystick Controller}{chapter.5}% 30
-\BOOKMARK [1][-]{section.5.3}{Results and Demonstration}{chapter.5}% 31
-\BOOKMARK [0][-]{chapter.6}{Future Work}{}% 32
-\BOOKMARK [0][-]{chapter.7}{Bug Report and Challenges}{}% 33
-\BOOKMARK [0][-]{chapter*.3}{References}{}% 34
-\BOOKMARK [0][-]{chapter*.4}{Appendix A: Circular Buffer}{}% 35
+\BOOKMARK [2][-]{subsection.5.1.1}{Flashing the Firmware}{section.5.1}% 30
+\BOOKMARK [2][-]{subsection.5.1.2}{Serial Communication Setup}{section.5.1}% 31
+\BOOKMARK [2][-]{subsection.5.1.3}{Sensor Calibration}{section.5.1}% 32
+\BOOKMARK [2][-]{subsection.5.1.4}{Using the MultiWii Serial Protocol Library}{section.5.1}% 33
+\BOOKMARK [1][-]{section.5.2}{Wireless Joystick Controller}{chapter.5}% 34
+\BOOKMARK [1][-]{section.5.3}{Results and Demonstration}{chapter.5}% 35
+\BOOKMARK [0][-]{chapter.6}{Future Work}{}% 36
+\BOOKMARK [0][-]{chapter.7}{Bug Report and Challenges}{}% 37
+\BOOKMARK [1][-]{section.7.1}{Bug Report}{chapter.7}% 38
+\BOOKMARK [0][-]{chapter*.3}{References}{}% 39

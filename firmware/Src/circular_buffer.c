@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include "circular_buffer.h"
 
-CircularBuffer rxc;
+CircularBuffer rxc, txc;
 
 int CB_Write(CircularBuffer *cb, uint8_t data)
 {
@@ -20,7 +20,7 @@ int CB_Write(CircularBuffer *cb, uint8_t data)
 	return 1;
 }
 
-int CB_Read(CircularBuffer *cb, uint8_t *data)
+int CB_Read(CircularBuffer *cb, volatile uint8_t *data)
 {
 	if (cb->size == 0) return 0;
 

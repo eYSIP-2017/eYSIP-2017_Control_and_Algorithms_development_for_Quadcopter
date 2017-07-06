@@ -1,0 +1,4 @@
+i2c.c:22:6:I2C_WriteByte	40	static
+i2c.c:40:9:I2C_ReadByte	40	static
+i2c.c:56:6:I2C_ReadBytes	32	static
+i2c.c:71:6:I2C_ReadByteArray	32	static

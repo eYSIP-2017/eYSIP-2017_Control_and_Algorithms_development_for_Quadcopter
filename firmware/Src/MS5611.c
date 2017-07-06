@@ -18,11 +18,13 @@
 
 extern msp_altitude msp_txf_altitude;
 struct LPF lpf_altitude = {0, 0.7};
+float alt_filter[20];
 
 // Public variables
 float MS5611_CompensatedTemperature;  					// Compensated temperature measurement
 float MS5611_CompensatedPressure;  						// Compensated pressure measurement
 float MS5611_Altitude;									// Computed altitude
+float MS5611_FilteredAltitude;
 
 // Private variables
 static uint32_t MS5611_RawTemperature;  				// Raw temperature measurement
@@ -79,14 +81,14 @@ static void MS5611_SetOSR(uint8_t osr)
 static uint16_t MS5611_ReadPROM(int8_t coef_num)
 {
 	uint8_t rxbuf[2] = {0, 0};
-	I2C_ReadByteArray(MS5611_ADDRESS, MS5611_CMD_READ_PROM + (coef_num * 2), rxbuf, 2); // Send PROM READ command
+	I2C_ReadByteArray(MS5611_ADDRESS, MS5611_CMD_READ_PROM + (coef_num * 2), rxbuf, 2, __FILE__, __LINE__); // Send PROM READ command
 	return ((rxbuf[0] << 8) | rxbuf[1]);
 }
 
 static uint32_t MS5611_ReadADC(void)
 {
 	uint8_t rxbuf[3];
-	I2C_ReadBytes(MS5611_ADDRESS, MS5611_CMD_ADC_READ, rxbuf, 3); // Read ADC 3 bytes
+	I2C_ReadBytes(MS5611_ADDRESS, MS5611_CMD_ADC_READ, rxbuf, 3, __FILE__, __LINE__); // Read ADC 3 bytes
 
 	// Combine the 3 bytes to form the 24 bit ADC value
 	return ((uint32_t)(rxbuf[0] << 16) | ((uint32_t)rxbuf[1] << 8) | (uint32_t)rxbuf[2]);
@@ -186,10 +188,23 @@ static void MS5611_Compute(void)
 	MS5611_CompensatedTemperature = (float) TEMP / 100.0f;
 }
 
+static void MS5611_FilterAltitude()
+{
+	float sum = 0;
+	for (int i=0; i<19; i++)
+	{
+		alt_filter[i] = alt_filter[i+1];
+		sum += alt_filter[i];
+	}
+	alt_filter[19] = MS5611_Altitude;
+	sum += alt_filter[19];
+	MS5611_FilteredAltitude = sum/20.0f;
+}
+
 // Calculate altitude from Pressure & Sea level pressure
 static void MS5611_ComputeAltitude()
 {
-	MS5611_Altitude = lowPassFilter(&lpf_altitude, 44330.0f * (1.0f - pow(MS5611_CompensatedPressure / SEA_LEVEL_PRESSURE, 0.1902949f)));
+	MS5611_Altitude = 44330.0f * (1.0f - pow(MS5611_CompensatedPressure / SEA_LEVEL_PRESSURE, 0.1902949f));
 }
 
 // Calculate sea level from Pressure given on specific altitude
@@ -215,6 +230,11 @@ float MS5611_GetAltitude(void)
 	return MS5611_Altitude;
 }
 
+float MS5611_GetFilteredAltitude(void)
+{
+	return MS5611_FilteredAltitude;
+}
+
 void MS5611_Update(void)
 {
 	if (TEMP_READY && PRESSURE_READY)
@@ -224,9 +244,10 @@ void MS5611_Update(void)
 
 		// Compute altitude
 		MS5611_ComputeAltitude();
+		MS5611_FilterAltitude();
 
 		// Update MSP frame
-		msp_txf_altitude.est_alt = (int32_t) MS5611_Altitude;
+		msp_txf_altitude.est_alt = (int32_t) MS5611_FilteredAltitude * 100;
 
 #ifdef BARO_DEBUG
 		serialPrint("Temp: ");
@@ -234,7 +255,7 @@ void MS5611_Update(void)
 		serialPrint(" C\tPressure: ");
 		serialFloat(MS5611_CompensatedPressure);
 		serialPrint(" hPa\tAltitude: ");
-		serialFloat(MS5611_ComputeAltitude(MS5611_CompensatedPressure));
+		serialFloat(MS5611_GetFilteredAltitude());
 		serialPrint(" m\n");
 #endif
 
@@ -271,4 +292,7 @@ void MS5611_Init(void)
 
 	for (int i=0; i<MS5611_PROM_NB; i++)
 		MS5611_Coefficients[i] = MS5611_ReadPROM(i);
+
+	for (int i=0; i<20; i++)
+		alt_filter[i] = 0;
 }

@@ -40,6 +40,7 @@ typedef struct
 	volatile float proportional;	// Proportional term
 	volatile float integral;		// Integral sum
 	volatile float derivative;		// Derivative term
+	volatile float gyro;			// Gyroscope rate
 	volatile float output; 			// PID output
 
 	volatile int direction;			// Controller direction
@@ -48,9 +49,14 @@ typedef struct
 	volatile uint32_t delta;		// Loop time
 }PID_TypeDef;
 
+extern PID_TypeDef pid_pitch;
+extern PID_TypeDef pid_roll;
+extern PID_TypeDef pid_yaw;
+extern PID_TypeDef pid_altitude;
+
+void Motor_ARM(uint8_t enable);
 void PID_Init();
 void PID_Update();
-void PID_SetPoint(float throttle, float pitch, float roll, float yaw);
 void PID_SetGains(int instance, float ckp, float cki, float ckd, float akp, float aki, float akd);
 
 #endif /* PID_H_ */

@@ -86,6 +86,7 @@
 void IMU_Init();
 void MPU9250_ReadAccelData();
 void MPU9250_ReadGyroData();
+void MPU9250_GetGyroData(float* data);
 void AK8963_ReadData();
 void AHRS_ComputeAngles();
 float AHRS_GetPitch();

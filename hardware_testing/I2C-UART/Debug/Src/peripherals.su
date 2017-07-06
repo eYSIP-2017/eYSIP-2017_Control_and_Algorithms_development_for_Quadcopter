@@ -1,0 +1,7 @@
+peripherals.c:147:6:_Error_Handler.constprop	8	static
+peripherals.c:16:6:SystemClock_Config	72	static
+peripherals.c:57:6:MX_I2C1_Init	8	static
+peripherals.c:94:6:MX_USART2_UART_Init	8	static
+peripherals.c:110:6:MX_GPIO_Init	40	static
+peripherals.c:129:6:Peripherals_Init	8	static
+peripherals.c:147:6:_Error_Handler	8	static

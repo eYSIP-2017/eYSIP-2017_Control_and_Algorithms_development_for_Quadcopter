@@ -1,0 +1,9 @@
+serial_new.c:22:5:serialAvailable	8	static
+serial_new.c:27:6:serialWrite	0	static
+serial_new.c:34:15:serialRead	16	static
+serial_new.c:41:6:HAL_UART_RxCpltCallback	8	static
+serial_new.c:51:6:serialFlush	0	static
+serial_new.c:56:6:serialBegin	8	static
+serial_new.c:62:6:serialPrint	16	static
+serial_new.c:68:6:serialInt	8	static
+serial_new.c:74:6:serialFloat	24	static

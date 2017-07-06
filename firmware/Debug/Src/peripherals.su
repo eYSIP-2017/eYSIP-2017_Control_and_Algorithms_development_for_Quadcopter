@@ -1,0 +1,3 @@
+peripherals.c:406:6:_Error_Handler	8	static
+peripherals.c:46:6:SystemClock_Config	72	static
+peripherals.c:384:6:Peripherals_Init	104	static

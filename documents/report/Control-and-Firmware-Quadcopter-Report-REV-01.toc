@@ -17,20 +17,32 @@
 \contentsline {section}{\numberline {4.2}Board Specific Package (BSP)}{14}{section.4.2}
 \contentsline {section}{\numberline {4.3}Attitude and Heading Reference System}{15}{section.4.3}
 \contentsline {subsection}{\numberline {4.3.1}MPU9250 Accelerometer and Gyroscope}{16}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}AK8963 Magnetometer}{18}{subsection.4.3.2}
-\contentsline {subsection}{\numberline {4.3.3}Sensor Fusion using Madgwick's AHRS Filter}{21}{subsection.4.3.3}
-\contentsline {section}{\numberline {4.4}Altitude Measurement}{22}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}MS5611 Barometer}{22}{subsection.4.4.1}
-\contentsline {section}{\numberline {4.5}Communication and Telemetry}{23}{section.4.5}
-\contentsline {subsection}{\numberline {4.5.1}MultiWii Serial Protocol}{23}{subsection.4.5.1}
-\contentsline {section}{\numberline {4.6}Control Algorithm}{25}{section.4.6}
-\contentsline {section}{\numberline {4.7}Motor Operation}{27}{section.4.7}
-\contentsline {section}{\numberline {4.8}Wireless Joystick Controller}{30}{section.4.8}
-\contentsline {chapter}{\numberline {5}Usage and Demonstration}{31}{chapter.5}
-\contentsline {section}{\numberline {5.1}Firmware Usage}{31}{section.5.1}
-\contentsline {section}{\numberline {5.2}Wireless Joystick Controller}{31}{section.5.2}
-\contentsline {section}{\numberline {5.3}Results and Demonstration}{31}{section.5.3}
-\contentsline {chapter}{\numberline {6}Future Work}{32}{chapter.6}
-\contentsline {chapter}{\numberline {7}Bug Report and Challenges}{34}{chapter.7}
-\contentsline {chapter}{References}{35}{chapter*.3}
-\contentsline {chapter}{Appendix A: Circular Buffer}{36}{chapter*.4}
+\contentsline {subsubsection}{\numberline {4.3.1.1}Accelerometer}{16}{subsubsection.4.3.1.1}
+\contentsline {subsubsection}{\numberline {4.3.1.2}Gyroscope}{17}{subsubsection.4.3.1.2}
+\contentsline {subsubsection}{\numberline {4.3.1.3}Sensor Initialization}{18}{subsubsection.4.3.1.3}
+\contentsline {subsubsection}{\numberline {4.3.1.4}Reading the Sensor Data}{19}{subsubsection.4.3.1.4}
+\contentsline {subsection}{\numberline {4.3.2}AK8963 Magnetometer}{20}{subsection.4.3.2}
+\contentsline {subsubsection}{\numberline {4.3.2.1}Magnetometer Biases}{20}{subsubsection.4.3.2.1}
+\contentsline {subsubsection}{\numberline {4.3.2.2}Sensor Initialization}{21}{subsubsection.4.3.2.2}
+\contentsline {subsubsection}{\numberline {4.3.2.3}Reading the Sensor Data}{24}{subsubsection.4.3.2.3}
+\contentsline {subsubsection}{\numberline {4.3.2.4}Magnetometer Calibration}{25}{subsubsection.4.3.2.4}
+\contentsline {subsection}{\numberline {4.3.3}Sensor Fusion using Madgwick's AHRS Filter}{27}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}Altitude Measurement}{28}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}MS5611 Barometer}{28}{subsection.4.4.1}
+\contentsline {section}{\numberline {4.5}Communication and Telemetry}{29}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}MultiWii Serial Protocol}{29}{subsection.4.5.1}
+\contentsline {section}{\numberline {4.6}Control Algorithm}{31}{section.4.6}
+\contentsline {section}{\numberline {4.7}Motor Operation}{33}{section.4.7}
+\contentsline {section}{\numberline {4.8}Wireless Joystick Controller}{36}{section.4.8}
+\contentsline {chapter}{\numberline {5}Usage and Demonstration}{37}{chapter.5}
+\contentsline {section}{\numberline {5.1}Firmware Usage}{37}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Flashing the Firmware}{37}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Serial Communication Setup}{38}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}Sensor Calibration}{38}{subsection.5.1.3}
+\contentsline {subsection}{\numberline {5.1.4}Using the MultiWii Serial Protocol Library}{39}{subsection.5.1.4}
+\contentsline {section}{\numberline {5.2}Wireless Joystick Controller}{42}{section.5.2}
+\contentsline {section}{\numberline {5.3}Results and Demonstration}{43}{section.5.3}
+\contentsline {chapter}{\numberline {6}Future Work}{44}{chapter.6}
+\contentsline {chapter}{\numberline {7}Bug Report and Challenges}{46}{chapter.7}
+\contentsline {section}{\numberline {7.1}Bug Report}{46}{section.7.1}
+\contentsline {chapter}{References}{48}{chapter*.3}

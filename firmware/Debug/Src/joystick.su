@@ -1,0 +1,2 @@
+joystick.c:45:6:MSP_SetPID_Callback	24	static
+joystick.c:90:6:MSP_SetRawRC_Callback	24	static

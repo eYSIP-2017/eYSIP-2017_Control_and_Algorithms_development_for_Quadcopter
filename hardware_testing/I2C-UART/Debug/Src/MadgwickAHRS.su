@@ -1,0 +1,3 @@
+MadgwickAHRS.c:7:6:MadgwickSetBeta	0	static
+MadgwickAHRS.c:12:6:MadgwickSetDelta	0	static
+MadgwickAHRS.c:23:6:MadgwickQuaternionUpdate	136	static

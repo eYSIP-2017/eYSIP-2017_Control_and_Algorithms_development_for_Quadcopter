@@ -74,7 +74,7 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 	switch (code)
 	{
 		case MSP_IDENT:
-			MSP_SendIdent();													// Send Identifier data on RTS
+			if (RTS) MSP_SendIdent();													// Send Identifier data on RTS
 			break;
 
 		case MSP_STATUS:
@@ -82,11 +82,11 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 			break;
 
 		case MSP_RAW_IMU:
-			MSP_SendRawIMU();													// Send Raw IMU data on RTS
+			if (RTS) MSP_SendRawIMU();													// Send Raw IMU data on RTS
 			break;
 
 		case MSP_MOTOR:
-			MSP_SendMotor();													// Send Motor data on RTS
+			if (RTS) MSP_SendMotor();													// Send Motor data on RTS
 			break;
 
 		case MSP_RC:
@@ -101,7 +101,7 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 			if (RTS) MSP_SendAltitude();										// Send Altitude data on RTS
 			break;
 
-		case MSP_ANALOG:
+		/*case MSP_ANALOG:
 			if (RTS) MSP_SendAnalog();											// Send Analog data on RTS
 			break;
 
@@ -131,7 +131,7 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 
 		case MSP_BOXIDS:
 			if (RTS) MSP_SendBoxIDs();											// Send Box IDs data on RTS
-			break;
+			break;*/
 
 		case MSP_SET_RAW_RC:
 			memcpy(&msp_rxf_raw_rc, data, sizeof(msp_set_raw_rc));				// Convert byte array to struct
@@ -143,7 +143,7 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 			MSP_SetPID_Callback();												// Callback function
 			break;
 
-		case MSP_SET_BOX:
+		/*case MSP_SET_BOX:
 			memcpy(&msp_rxf_box, data, sizeof(msp_set_box));					// Convert byte array to struct
 			MSP_SetBox_Callback();												// Callback function
 			break;
@@ -177,13 +177,18 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 			break;
 
 		case MSP_EXT_DEBUG:														// Not implemented
-			break;
+			break;*/
 	}
 }
 
 /** Public functions */
 void MSP_Update()
 {
+	serialPrint("\n\nCount: ");
+	serialInt(rxf.count);
+	serialPrint("\nAvail: ");
+	serialInt(serialAvailable());
+
 	if (serialAvailable() == 0) return;
 
 	/* Check '$' header element */
@@ -318,7 +323,7 @@ void MSP_SendIdent()
  ***********************************/
 void MSP_SendStatus()
 {
-	msp_txf_status.sensor = 6;
+	msp_txf_status.sensor = 7;
 	msp_txf_status.flag = 42;
 	msp_txf_status.current_set = 0;
 
@@ -640,5 +645,4 @@ void MSP_SetLED_Callback()
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, msp_rxf_led.led1);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, msp_rxf_led.led2);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, msp_rxf_led.led3);
-	serialPrint("Success!");
 }

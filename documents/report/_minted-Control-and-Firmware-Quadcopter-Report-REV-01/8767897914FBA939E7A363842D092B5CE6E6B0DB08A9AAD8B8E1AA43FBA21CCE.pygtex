@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{accelData}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{x} \PYG{o}{*} \PYG{l+m+mf}{4.0f}\PYG{o}{/}\PYG{l+m+mf}{32768.0f}\PYG{p}{;}
+\PYG{n}{accelData}\PYG{p}{.}\PYG{n}{y} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{y} \PYG{o}{*} \PYG{l+m+mf}{4.0f}\PYG{o}{/}\PYG{l+m+mf}{32768.0f}\PYG{p}{;}
+\PYG{n}{accelData}\PYG{p}{.}\PYG{n}{z} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{z} \PYG{o}{*} \PYG{l+m+mf}{4.0f}\PYG{o}{/}\PYG{l+m+mf}{32768.0f}\PYG{p}{;}
+\end{Verbatim}

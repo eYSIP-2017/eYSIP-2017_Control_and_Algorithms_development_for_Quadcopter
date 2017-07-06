@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Data buffer to store the raw data}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{raw\PYGZus{}data}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{};}
+
+\PYG{c+c1}{// Read raw data}
+\PYG{n}{I2C\PYGZus{}ReadByteArray}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{ACCEL\PYGZus{}XOUT\PYGZus{}H}\PYG{p}{,} \PYG{n}{raw\PYGZus{}data}\PYG{p}{,} \PYG{l+m+mi}{6}\PYG{p}{);}
+
+\PYG{c+c1}{// Pack it to 16\PYGZhy{}bits and store it}
+\PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{int16\PYGZus{}t}\PYG{p}{)} \PYG{p}{((}\PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{|} \PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]);}
+\PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{y} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{int16\PYGZus{}t}\PYG{p}{)} \PYG{p}{((}\PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{|} \PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]);}
+\PYG{n}{accelRaw}\PYG{p}{.}\PYG{n}{z} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{int16\PYGZus{}t}\PYG{p}{)} \PYG{p}{((}\PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{|} \PYG{n}{raw\PYGZus{}data}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]);}
+\end{Verbatim}

@@ -1,0 +1,13 @@
+stm32f1xx_hal_flash.c:928:13:FLASH_SetErrorCode	0	static
+stm32f1xx_hal_flash.c:285:19:HAL_FLASH_Program_IT	16	static
+stm32f1xx_hal_flash.c:625:13:HAL_FLASH_EndOfOperationCallback	0	static
+stm32f1xx_hal_flash.c:642:13:HAL_FLASH_OperationErrorCallback	0	static
+stm32f1xx_hal_flash.c:350:6:HAL_FLASH_IRQHandler	16	static
+stm32f1xx_hal_flash.c:674:19:HAL_FLASH_Unlock	0	static
+stm32f1xx_hal_flash.c:707:19:HAL_FLASH_Lock	0	static
+stm32f1xx_hal_flash.c:725:19:HAL_FLASH_OB_Unlock	0	static
+stm32f1xx_hal_flash.c:745:19:HAL_FLASH_OB_Lock	0	static
+stm32f1xx_hal_flash.c:758:19:HAL_FLASH_OB_Launch	8	static
+stm32f1xx_hal_flash.c:789:10:HAL_FLASH_GetError	0	static
+stm32f1xx_hal_flash.c:840:19:FLASH_WaitForLastOperation	24	static
+stm32f1xx_hal_flash.c:186:19:HAL_FLASH_Program	40	static

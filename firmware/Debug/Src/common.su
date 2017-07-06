@@ -1,0 +1,3 @@
+common.c:10:6:map	8	static
+common.c:15:7:mapfloat	24	static
+common.c:20:7:lowPassFilter	16	static

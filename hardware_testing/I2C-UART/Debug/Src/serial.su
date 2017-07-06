@@ -1,0 +1,5 @@
+serial.c:26:6:printChar	0	static
+serial.c:34:6:printLine	0	static
+serial.c:41:6:printString	8	static
+serial.c:48:6:printInt	8	static
+serial.c:55:6:printFloat	24	static

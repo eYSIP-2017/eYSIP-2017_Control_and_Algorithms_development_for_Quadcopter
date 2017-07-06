@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Verify device by comparing the WHO\PYGZus{}AM\PYGZus{}I register value}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}ReadByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{WHO\PYGZus{}AM\PYGZus{}I}\PYG{p}{,} \PYG{n}{\PYGZus{}\PYGZus{}FILE\PYGZus{}\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}\PYGZus{}LINE\PYGZus{}\PYGZus{}}\PYG{p}{);}
+
+\PYG{c+c1}{// Device verification failed}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{data} \PYG{o}{!=} \PYG{n}{WHO\PYGZus{}AM\PYGZus{}I\PYGZus{}VALUE}\PYG{p}{)} \PYG{n}{\PYGZus{}Error\PYGZus{}Handler}\PYG{p}{(}\PYG{n}{\PYGZus{}\PYGZus{}FILE\PYGZus{}\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}\PYGZus{}LINE\PYGZus{}\PYGZus{}}\PYG{p}{);}
+\end{Verbatim}

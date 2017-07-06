@@ -36,8 +36,8 @@ struct IMUData
 	float x;
 	float y;
 	float z;
-}accelData, gyroData, magData, magCalib, magBias = {-2.618, 385.273, -222.659},
-gyroBias = {0.084, 0.132, 0.019}, magScale = {1.057, 1.008, 0.942};
+}accelData, gyroData, magData, magCalib, magBias = {94.251, 513.113, -336.519},
+gyroBias = {0.084, 0.132, 0.019}, magScale = {1.019, 0.991, 0.991};
 
 struct IMURaw
 {
@@ -58,7 +58,7 @@ struct LPF lpf_pitch = {0, 0.7}, lpf_roll = {0, 0.7}, lpf_yaw = {0, 0};
 void MPU9250_Init()
 {
 	// Verify device
-	uint8_t data = I2C_ReadByte(MPU9250_ADDRESS, WHO_AM_I);
+	uint8_t data = I2C_ReadByte(MPU9250_ADDRESS, WHO_AM_I, __FILE__, __LINE__);
 	if (data != WHO_AM_I_VALUE) _Error_Handler(__FILE__, __LINE__);
 
 	// Device configuration
@@ -87,7 +87,7 @@ void MPU9250_ReadAccelData()
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0};
 
 	// Read raw data
-	I2C_ReadByteArray(MPU9250_ADDRESS, ACCEL_XOUT_H, raw_data, 6);
+	I2C_ReadByteArray(MPU9250_ADDRESS, ACCEL_XOUT_H, raw_data, 6, __FILE__, __LINE__);
 
 	// Convert and store it
 	accelRaw.x = (int16_t) ((raw_data[0]<<8) | raw_data[1]);
@@ -121,7 +121,7 @@ void MPU9250_ReadGyroData()
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0};
 
 	// Read raw data
-	I2C_ReadByteArray(MPU9250_ADDRESS, GYRO_XOUT_H, raw_data, 6);
+	I2C_ReadByteArray(MPU9250_ADDRESS, GYRO_XOUT_H, raw_data, 6, __FILE__, __LINE__);
 
 	// Convert and store it
 	gyroRaw.x = (int16_t) ((raw_data[0]<<8) | raw_data[1]);
@@ -143,6 +143,20 @@ void MPU9250_ReadGyroData()
 }
 
 /**********************************
+ Function name	:	MPU9250_GetGyroData
+ Functionality	:	Returns the converted gyroscope readings
+ Arguments		:	Data array pointer
+ Return Value	:	None
+ Example Call	:	MPU9250_GetGyroData()
+ ***********************************/
+void MPU9250_GetGyroData(float* data)
+{
+	data[0] = gyroData.y;
+	data[1] = gyroData.x;
+	data[2] = -gyroData.z;
+}
+
+/**********************************
  Function name	:	AK8963_Init
  Functionality	:	To setup the magnetometer
  Arguments		:	None
@@ -156,18 +170,18 @@ void AK8963_Init()
 	I2C_WriteByte(MPU9250_ADDRESS, USER_CTRL,   0x01, 1); 	// Disable master mode and clear all signal paths
 
 	// Verify magnetometer
-	uint8_t data = I2C_ReadByte(MAG_ADDRESS, MAG_WIA);
+	uint8_t data = I2C_ReadByte(MAG_ADDRESS, MAG_WIA, __FILE__, __LINE__);
 	if (data != MAG_WIA_VALUE) _Error_Handler(__FILE__, __LINE__);
 
-	// Calibrate magnetometer factory offset
 	I2C_WriteByte(MAG_ADDRESS, MAG_CNTL2, 0x01, 1);		// Reset magnetometer
 	I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x00, 1);		// Power down magnetometer
 	I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x0F, 1); 	// Enter Fuse ROM access mode
 
 	// Read calibration registers
 	uint8_t rawData[3];
-	I2C_ReadByteArray(MAG_ADDRESS, MAG_ASAX, rawData, 3);
+	I2C_ReadByteArray(MAG_ADDRESS, MAG_ASAX, rawData, 3, __FILE__, __LINE__);
 
+	// Calibrate magnetometer factory offset
 	magCalib.x =  (float)(rawData[0] - 128)/256.0f + 1.0f;   // Return x-axis sensitivity adjustment values
 	magCalib.y =  (float)(rawData[1] - 128)/256.0f + 1.0f;
 	magCalib.z =  (float)(rawData[2] - 128)/256.0f + 1.0f;
@@ -198,19 +212,21 @@ void AK8963_ReadData()
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0, 0};
 
 	// Check if data is ready
-	if (I2C_ReadByte(MAG_ADDRESS, MAG_ST1) & 0x01)
+	if (I2C_ReadByte(MAG_ADDRESS, MAG_ST1, __FILE__, __LINE__) & 0x01)
 	{
 		// Read data registers and ST2 register to check overflow
-		I2C_ReadByteArray(MAG_ADDRESS, MAG_HXL, raw_data, 7);
+		I2C_ReadByteArray(MAG_ADDRESS, MAG_HXL, raw_data, 7, __FILE__, __LINE__);
 		uint8_t OVF = raw_data[6];
 
 		// Store data if no overflow occurred
 		if (!(OVF & 0x08))
 		{
+			// Pack into 16-bit data
 			magRaw.x = (int16_t) ((raw_data[1]<<8) | raw_data[0]);
 			magRaw.y = (int16_t) ((raw_data[3]<<8) | raw_data[2]);
 			magRaw.z = (int16_t) ((raw_data[5]<<8) | raw_data[4]);
 
+			// Apply the calibration and conversion factors
 			magData.x = (((float) magRaw.x * mRes * magCalib.x) - magBias.x) * magScale.x;
 			magData.y = (((float) magRaw.y * mRes * magCalib.y) - magBias.y) * magScale.y;
 			magData.z = (((float) magRaw.z * mRes * magCalib.z) - magBias.z) * magScale.z;
@@ -290,7 +306,6 @@ float AHRS_GetYaw()
 	return ((angle >= -180) && (angle < 90)) ? (angle + 90) : (angle - 270);
 }
 
-
 /**********************************
  Function name	:	AHRS_ComputeAngles
  Functionality	:	Update the 9DOF data from IMU and compute pitch, roll and yaw
@@ -317,9 +332,9 @@ void AHRS_ComputeAngles()
 			gyroData.x, -gyroData.z, magData.x,	magData.y, magData.z, AHRS_Angle);
 
 	// Update raw IMU MSP frame
-	msp_txf_raw_imu.accx = accelRaw.x;
-	msp_txf_raw_imu.accy = accelRaw.y;
-	msp_txf_raw_imu.accz = accelRaw.z;
+	msp_txf_raw_imu.accx = accelRaw.x / 100;
+	msp_txf_raw_imu.accy = accelRaw.y / 100;
+	msp_txf_raw_imu.accz = accelRaw.z / 100;
 
 	msp_txf_raw_imu.gyrx = gyroRaw.x;
 	msp_txf_raw_imu.gyry = gyroRaw.y;
@@ -333,12 +348,4 @@ void AHRS_ComputeAngles()
 	msp_txf_attitude.angx = AHRS_GetRoll() * 10;	// Multiply by 10 -> Required by MSP
 	msp_txf_attitude.angy = AHRS_GetPitch() * 10;	// Multiply by 10 -> Required by MSP
 	msp_txf_attitude.heading = AHRS_GetYaw();
-
-#ifdef IMU_DEBUG
-	// Update and send data frame
-	txf.x = AHRS_Angle[0];
-	txf.y = AHRS_Angle[1];
-	txf.z = AHRS_Angle[2];
-	sendFrame(&txf);
-#endif
 }

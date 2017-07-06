@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Power down magnetometer}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MAG\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MAG\PYGZus{}CNTL1}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Enter Fuse ROM access mode}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MAG\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MAG\PYGZus{}CNTL1}\PYG{p}{,} \PYG{l+m+mh}{0x0F}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Read calibration registers for sensitivity adjustment values}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{rawData}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{];}
+\PYG{n}{I2C\PYGZus{}ReadByteArray}\PYG{p}{(}\PYG{n}{MAG\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MAG\PYGZus{}ASAX}\PYG{p}{,} \PYG{n}{rawData}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{);}
+
+\PYG{c+c1}{// Calculate and store the adjusted measurement data}
+\PYG{n}{magCalib}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=}  \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)(}\PYG{n}{rawData}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{128}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{256.0f} \PYG{o}{+} \PYG{l+m+mf}{1.0f}\PYG{p}{;}
+\PYG{n}{magCalib}\PYG{p}{.}\PYG{n}{y} \PYG{o}{=}  \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)(}\PYG{n}{rawData}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{128}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{256.0f} \PYG{o}{+} \PYG{l+m+mf}{1.0f}\PYG{p}{;}
+\PYG{n}{magCalib}\PYG{p}{.}\PYG{n}{z} \PYG{o}{=}  \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)(}\PYG{n}{rawData}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{128}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{256.0f} \PYG{o}{+} \PYG{l+m+mf}{1.0f}\PYG{p}{;}
+\end{Verbatim}

@@ -63,14 +63,18 @@
 #include "peripherals.h"
 #include "devices.h"
 #include "serial.h"
+#include "telemetry.h"
 #include "timing.h"
 #include "MPU9250.h"
 #include "MS5611.h"
 #include "msp.h"
 #include "pid.h"
+#include "circular_buffer.h"
 #include "main.h"
 
 volatile uint32_t last_tick1 = 0, last_tick2 = 0, last_tick3 = 0;
+extern struct txFrame txf;
+extern CircularBuffer rxc, txc;
 
 void taskScheduler()
 {
@@ -80,16 +84,18 @@ void taskScheduler()
 		last_tick1 = millis();
 
 		/** Tasks */
-
 		/* Sensor Update */
 		//AK8963_ReadData();
 		AHRS_ComputeAngles();
+	}
+
+	if ((millis() - last_tick3) >= 3)
+	{
+		/** Save Time */
+		last_tick3 = millis();
 
 		/* Control */
 		PID_Update();
-
-		/* Telemetry */
-
 	}
 
 	if ((millis() - last_tick2) > 100)
@@ -104,7 +110,14 @@ void taskScheduler()
 		MSP_SendStatus();
 		MSP_SendMotor();
 		MSP_SendAttitude();
-		MSP_SendRawIMU();*/
+		MSP_SendAltitude();
+		MSP_SendRawIMU();
+		MSP_SendPID();*/
+
+		/*txf.x = AHRS_GetPitch();
+		txf.y = AHRS_GetRoll();
+		txf.z = AHRS_GetYaw();
+		sendFrame();*/
 	}
 
 	/** Non-blocking tasks */
@@ -112,20 +125,10 @@ void taskScheduler()
 	MSP_Update();
 }
 
-void blinker(uint32_t delay)
-{
-	if ((micros() - last_tick3) > delay)
-	{
-		last_tick3 = micros();
-		HAL_GPIO_TogglePin(Blue_LED_GPIO_Port, Blue_LED_Pin);
-	}
-}
-
 void setup(void)
 {
 	Devices_Init();
 	serialBegin();
-	//MSP_Init();
 	IMU_Init();
 	MS5611_Init();
 	PID_Init();

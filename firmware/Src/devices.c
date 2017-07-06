@@ -10,6 +10,11 @@
 #include "devices.h"
 #include "timing.h"
 
+#define MOTOR1_SCALE 1
+#define MOTOR2_SCALE 1
+#define MOTOR3_SCALE 1
+#define MOTOR4_SCALE 1
+
 // Configuration structure declarations
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -51,7 +56,7 @@ void LED_StartupSequence()
  ***********************************/
 void Motor1_SetPWM(int pwm)
 {
-	pwm = (int)(pwm * 1.000f);
+	pwm = (int)(pwm * MOTOR1_SCALE);
 	__HAL_TIM_SetCompare(&htim4, TIM_CHANNEL_4, pwm); // Motor 1
 }
 
@@ -64,7 +69,7 @@ void Motor1_SetPWM(int pwm)
  ***********************************/
 void Motor2_SetPWM(int pwm)
 {
-	pwm = (int)(pwm * 0.760f);
+	pwm = (int)(pwm * MOTOR2_SCALE);
 	__HAL_TIM_SetCompare(&htim4, TIM_CHANNEL_3, pwm); // Motor 2
 }
 
@@ -77,7 +82,7 @@ void Motor2_SetPWM(int pwm)
  ***********************************/
 void Motor3_SetPWM(int pwm)
 {
-	pwm = (int)(pwm * 1.0f);//0.884f);
+	pwm = (int)(pwm * MOTOR3_SCALE);
 	__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwm); // Motor 3
 }
 
@@ -90,7 +95,7 @@ void Motor3_SetPWM(int pwm)
  ***********************************/
 void Motor4_SetPWM(int pwm)
 {
-	pwm = (int)(pwm * 0.809f);
+	pwm = (int)(pwm * MOTOR4_SCALE);
 	__HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_3, pwm); // Motor 4
 }
 

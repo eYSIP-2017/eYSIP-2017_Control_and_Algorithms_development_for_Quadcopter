@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Reset}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MPU\PYGZus{}PWR\PYGZus{}MGMT\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mh}{0x80}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Set clock source to be PLL}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MPU\PYGZus{}PWR\PYGZus{}MGMT\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mh}{0x01}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Enable Accel and Gyro}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MPU\PYGZus{}PWR\PYGZus{}MGMT\PYGZus{}2}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Sample Rate Divider (Not set)}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{SMPLRT\PYGZus{}DIV}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// DLPF 184Hz}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{ACCEL\PYGZus{}CONFIG2}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MPU9250\PYGZus{}CONFIG}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+
+\PYG{c+c1}{// Full scale settings}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{GYRO\PYGZus{}CONFIG}\PYG{p}{,} \PYG{n}{GYRO\PYGZus{}FS\PYGZus{}1000\PYGZus{}DPS}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MPU9250\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{ACCEL\PYGZus{}CONFIG}\PYG{p}{,} \PYG{n}{ACC\PYGZus{}FS\PYGZus{}4\PYGZus{}G}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+\end{Verbatim}

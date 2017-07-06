@@ -1,0 +1,4 @@
+MPU9250.c:53:6:_Error_Handler	8	static
+MPU9250.c:61:16:debug_TX	0	static
+MPU9250.c:66:6:MPU9250_Init	40	static
+MPU9250.c:72:6:test_MPU	32	static

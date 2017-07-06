@@ -31,6 +31,7 @@ void MS5611_Init(void);
 float MS5611_GetTemperature(void);
 float MS5611_GetPressure(void);
 float MS5611_GetAltitude(void);
+float MS5611_GetFilteredAltitude(void);
 void MS5611_Update(void);
 
 #endif /* MS5611_H_ */

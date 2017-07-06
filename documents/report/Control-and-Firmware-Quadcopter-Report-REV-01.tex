@@ -8,6 +8,8 @@
 }
 
 \usepackage{blindtext}
+\usepackage{minted}
+\setcounter{secnumdepth}{3}
 
 %\usepackage[none]{hyphenat}
 \usepackage[parfill]{parskip}
@@ -56,9 +58,9 @@ title=\textbf{\Large{#1}}}
 %use of packgage watermark for pages
 %\usepackage{draftwatermark}
 %\SetWatermarkText{\includegraphics{logo}}
-\usepackage[scale=2,opacity=0.1,angle=0]{background}
+\usepackage[scale=3.2,opacity=0.1,angle=0]{background}
 \backgroundsetup{
-contents={\includegraphics{images/logo}}
+contents={\includegraphics{images/logo-med}}
 }
 
 %use of newcommand for keywords color
@@ -77,6 +79,12 @@ contents={\includegraphics{images/logo}}
 \usepackage{dirtree}
 \usepackage{siunitx}
 
+\makeatletter
+\global\let\tikz@ensure@dollar@catcode=\relax
+\makeatother
+
+\usepackage{textcomp}
+
 %---------------------- End of the Preamble ---------------------------------------
 
 
@@ -87,7 +95,17 @@ contents={\includegraphics{images/logo}}
 \raggedright
 {\Large eYSIP 2017\\[1cm]}
 {\Huge \scshape Control and Firmware Development for Quadcopters \\[.1in]}
+
 \vfill
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{images/pluto_drone}
+Pluto Drone by Drona Aviation
+\end{figure}
+
+\vfill
+
 \begin{flushright}
 {\large Heethesh Vhavle \\}
 {\large Sanam Shakya \\}
@@ -129,7 +147,7 @@ The project deals with the study of control algorithms and to develop a custom f
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=0.8\textwidth]{images/pluto_drone}
-\caption{Pluto Drone by Drone Aviation}
+\caption{Pluto Drone by Drona Aviation}
 \end{figure}
 
 %-------------------------------------------------------------------------------
@@ -203,6 +221,7 @@ The Eclipse IDE requires the tool-chain, debug and build tools to be installed m
 The IDE used is in this project is \href{https://atollic.com/resources/download/}{Attolic TrueSTUDIO}, which is based on the Eclipse IDE. One of the main advantages is that TrueSTUDIO IDE already comes with the GCC tool-chains for ARM and the required debugging tools.\\ 
 
 \subsection{Debugging Tools}
+\label{ssec:stmdebug}
 One of the key feature of Nucleo board is that it already provides the on-chip programmer for STM32 micro-controllers. In order to use this, \href{http://www.st.com/en/embedded-software/stsw-link009.html}{ST-LINK drivers} need to be installed.\\
 
 Although TrueSTUDIO has built-in debugging tools, some of the features are not available in the free version of the software. Instead, we can use the official \href{http://www.st.com/en/embedded-software/stsw-link004.html}{ST-LINK Utility} tool.\\
@@ -215,6 +234,7 @@ The ST-LINK Utility tool also supports flashing the program on to the board. One
 Another method of flashing the program is by using the built-in UART Bootloader. Further details are explained \href{http://www.scienceprog.com/flashing-programs-to-stm32-embedded-bootloader/}{here}. An USART to USB driver chip like FT232 can be used along with \href{http://www.st.com/en/development-tools/flasher-stm32.html}{STM32 Flash Loader Demonstrator} to flash the program. The \textit{Pluto Drone} board supports wireless programming (UART Bootloading) with the help of the ESP8266 which is connected to the boot, reset and USART pins on the board. \href{https://chrome.google.com/webstore/detail/cleanflight-configurator/enacoimjcgeinfnnnpajinjgmkahmfgb?hl=en}{CleanFlight Configurator} software can be used to flash the program (\textit{*.hex}) over Wi-Fi. 
 
 \section{Programming the STM32 Micro-controller}
+\label{sec:progstm32}
 
 Programming the STM32 series micro-controllers is done in various layers namely, CMSIS, HAL, BSP and Application code. The software stack is shown in \textit{\autoref{fig:software_stack}}.\\
 
@@ -296,7 +316,7 @@ The BSP layer bridges the gap between the device drivers and the application lay
 
 \item \textbf{serial.h} | The serial library consists of serial read and write functions for a single byte from the circular buffer. The UART interrupt callback functions of the HAL are implemented in this library. It also provides functions for printing strings, floats and integers on a terminal.\\
 
-\item \textbf{circular{\_}buffer.h} | A circular buffer is required to store the received data when using interrupts for UART communication. Further details of UART communication is explained in \autoref{sec:comm}.\\
+\item \textbf{circular{\_}buffer.h} | A circular buffer is required to store the received data when using interrupts for UART communication. Further details of UART communication is explained in \cite{fifo}.\\
 
 \item \textbf{i2c.h} | This library provides function to write a single byte and read individual as well as multiple bytes over I2C protocol.\\
 
@@ -320,7 +340,7 @@ AHRS consist of either solid-state or microelectromechanical systems (MEMS) gyro
 \end{figure}
 
 \subsection{MPU9250 Accelerometer and Gyroscope}
-The \href{./datasheets/MPU9250 Datasheet.pdf}{MPU-9250} is an inertial measurement unit (IMU). MPU-9250 features three 16-bit analog-to-digital converters (ADCs) for digitizing the gyroscope outputs, three 16-bit ADCs for digitizing the accelerometer outputs, and three 16-bit ADCs for digitizing the magnetometer outputs. For precision tracking of both fast and slow motions, the parts feature a user-programmable gyroscope full-scale range of $\pm$250, $\pm$500, $\pm$1000, and $\pm$\SI{42}{\degree\per\second} (dps), a user-programmable accelerometer full-scale range of $\pm$2g, $\pm$4g, $\pm$8g, and $\pm$16g, and a magnetometer full-scale range of $\pm$4800$\mu$T. The MPU-9250 can be interfaced via SPI or I2C. In our case, I2C at \SI{400}{\kilo\hertz} is used to interface the sensor.\\
+The \href{./datasheets/MPU9250 Datasheet.pdf}{MPU-9250} is an inertial measurement unit (IMU). MPU-9250 features three 16-bit analog-to-digital converters (ADCs) for digitizing the gyroscope outputs, three 16-bit ADCs for digitizing the accelerometer outputs, and three 16-bit ADCs for digitizing the magnetometer outputs. For precision tracking of both fast and slow motions, the parts feature a user-programmable gyroscope full-scale range of $\pm$250, $\pm$500, $\pm$1000, and $\pm$\SI{42}{\degree\per\second} (dps), a user-programmable accelerometer full-scale range of $\pm$2g, $\pm$4g, $\pm$8g, and $\pm$16g, and a magnetometer full-scale range of $\pm$4800$\mu$T. The MPU-9250 can be interfaced via SPI or I2C. In our case, I2C at \SI{400}{\kilo\hertz} is used to interface the sensor.
 
 \begin{figure}[!htb]
 \centering
@@ -328,10 +348,12 @@ The \href{./datasheets/MPU9250 Datasheet.pdf}{MPU-9250} is an inertial measureme
 \caption{InvenSense MPU-9250 QFN package\cite{mpu9250}}
 \end{figure}
 
+\subsubsection{Accelerometer}
 Accelerometers are devices that measure static acceleration in all the three axes. They measure in G-forces (g) equivalent to \SI{9.8}{\kilo\gram\meter\per\second\squared}. Most accelerometers will have a selectable range of forces they can measure. These ranges can vary from $\pm$1g up to $\pm$250g. Typically, the smaller the range, the more sensitive the readings will be from the accelerometer. In our case, the selected range is $\pm$4g.\cite{tonik}\\
 
-Assuming no external forces act (except gravity) on the accelerometer, the pitch and roll angles can easily be computed by knowing the components of gravity in the different axis, which is the sensor output. By using trigonometric formulas, we can easily compute these angles. Practically, the accelerometer not only measures gravity but also all the other vibrations and the output is very noisy. This noise can be filtered out with the help of a gyroscope.\\
+Assuming no external forces act (except gravity) on the sensor, the pitch and roll angles can easily be computed by knowing the components of gravity in the different axis, which is the sensor output. By using trigonometric formulas, we can easily compute these angles. Practically, the accelerometer not only measures gravity but also all the other vibrations and the output is very noisy. This noise can be filtered out with the help of a gyroscope.\\
 
+\subsubsection{Gyroscope}
 The gyroscope sensor within the MEMS is tiny (between 1 to 100 micrometers). When the gyro is rotated, a small resonating mass is shifted as the angular velocity changes. This movement is converted into very low-current electrical signals that can be amplified and read by a host micro-controller \cite{gyro}. The range of the gyroscope selected is $\pm$1000 dps.\\
 
 \begin{figure}[!htb]
@@ -346,12 +368,144 @@ One of the solutions to combat this problem is to fuse the sensor data from both
 
 However, this solution only provides us with only the pitch and roll angles. We also require to know the heading of the quadcopter or the yaw angle. Although, the gyroscope can measure the yaw rate of rotation, the accelerometer has no means to detect a change in yaw direction, as it only refers to gravity. Without a reference in the yaw direction, the gyroscope output will again drift. Now, that's where the Magnetometer comes in to provide this absolute reference.\\
 
-\subsection{AK8963 Magnetometer}
-The AK8963 Magnetometer is 3-axis electronic compass IC with high sensitive Hall sensor technology. This sensor is interfaced as an auxiliary sensor to the MPU-9250. The MPU-9250 acts as a master to any external sensors connected to the auxiliary I2C bus. To access the magnetometer via MPU-9250, the \textit{BYPAS{\_}EN} bit in the \textit{INT Pin / Bypass Enable Configuration} register of the MPU-9250 has to be set. Further details about this can be found in  \href[page=23]{./datasheets/MPU9250 Datasheet.pdf}{Page 23 - Datasheet}.\\
+\clearpage
 
+\subsubsection{Sensor Initialization}
+Following is a snippet explaining the initialization of the IMU. It is always a safe practice to verify the device ID of the sensor, so that we know the I2C interface is successful and if not, handle the error. The register names are macros defined in the \textit{MPU9250.h} header file. Address values and register bits are explained in detail in the \href{./datasheets/MPU9250 Register Map.pdf}{MPU-9250 Register Map}.\\  
+
+\begin{minted}[linenos=true]{c}
+// Verify device by comparing the WHO_AM_I register value
+uint8_t data = I2C_ReadByte(MPU9250_ADDRESS, WHO_AM_I, __FILE__, __LINE__);
+ 
+// Device verification failed 
+if (data != WHO_AM_I_VALUE) _Error_Handler(__FILE__, __LINE__);
+\end{minted}
+
+\bigskip
+The next step is to first reset the device, enable the sensors and configure the internal clock source. Settings such as digital low pass filtering and full scale range can be configured as shown below.\\
+
+\begin{minted}[linenos=true]{c}
+// Reset
+I2C_WriteByte(MPU9250_ADDRESS, MPU_PWR_MGMT_1, 0x80, 1);
+ 
+// Set clock source to be PLL
+I2C_WriteByte(MPU9250_ADDRESS, MPU_PWR_MGMT_1, 0x01, 1); 
+ 
+// Enable Accel and Gyro
+I2C_WriteByte(MPU9250_ADDRESS, MPU_PWR_MGMT_2, 0x00, 1); 
+ 
+// Sample Rate Divider (Not set) 
+I2C_WriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x00, 1); 
+ 
+// DLPF 184Hz 
+I2C_WriteByte(MPU9250_ADDRESS, ACCEL_CONFIG2, 0x03, 1); 
+I2C_WriteByte(MPU9250_ADDRESS, MPU9250_CONFIG, 0x03, 1);
+
+// Full scale settings
+I2C_WriteByte(MPU9250_ADDRESS, GYRO_CONFIG, GYRO_FS_1000_DPS, 1);
+I2C_WriteByte(MPU9250_ADDRESS, ACCEL_CONFIG, ACC_FS_4_G, 1);
+\end{minted}
+
+\clearpage
+
+\subsubsection{Reading the Sensor Data}
+The initialization function will have to be called once and after that the raw data from the sensors can be read, converted and compensated at fixed refresh rate. The chosen refresh rate must be less than the update rate of the sensor. MPU-9250 has an update rate of \SI{1}{\kilo\hertz}. The raw data is available in the output registers in series, starting with the X axis. The output of each axis is a 16-bit value and is available as set of two bytes (high and low). Therefore, six bytes of data will have to be read in series (two for each axis) and they must be packed back to a 16-bit value.\\
+
+\begin{minted}[linenos=true]{c}
+// Data buffer to store the raw data
+uint8_t raw_data[] = {0, 0, 0, 0, 0, 0};
+
+// Read raw data
+I2C_ReadByteArray(MPU9250_ADDRESS, ACCEL_XOUT_H, raw_data, 6);
+
+// Pack it to 16-bits and store it
+accelRaw.x = (int16_t) ((raw_data[0]<<8) | raw_data[1]);
+accelRaw.y = (int16_t) ((raw_data[2]<<8) | raw_data[3]);
+accelRaw.z = (int16_t) ((raw_data[4]<<8) | raw_data[5]);
+\end{minted}
+
+\bigskip
+The raw data is just a numerical value ranging from -32768 to +32767. This data will have to be converted to G-units. The conversion depends on the full scale range settings chosen for the sensor. Here the setting chosen was $\pm4$ and the conversion is performed as follows.\\
+
+\begin{minted}[linenos=true]{c}
+accelData.x = (float) accelRaw.x * 4.0f/32768.0f;
+accelData.y = (float) accelRaw.y * 4.0f/32768.0f;
+accelData.z = (float) accelRaw.z * 4.0f/32768.0f;
+\end{minted}
+
+\bigskip
+Similarly, the gyroscope data can be obtained, the only difference being the conversion factor. When the sensor is kept in static position, the output of the gyroscope will still be non-zero. This gyroscope bias can calculated by taking multiple samples when kept still, and then averaging it.\\
+
+\begin{minted}[linenos=true]{c}
+gyroData.x = ((float) gyroRaw.x * 1000.0f/32768.0f) - gyroBias.x;
+gyroData.y = ((float) gyroRaw.y * 1000.0f/32768.0f) - gyroBias.y;
+gyroData.z = ((float) gyroRaw.z * 1000.0f/32768.0f) - gyroBias.z;
+\end{minted}
+
+\clearpage
+
+\subsection{AK8963 Magnetometer}
+\label{ssec:akmag}
+The AK8963 Magnetometer is 3-axis electronic compass IC with high sensitive Hall sensor technology. This sensor is interfaced as an auxiliary sensor to the MPU-9250. The MPU-9250 acts as a master to any external sensors connected to the auxiliary I2C bus. To access the magnetometer via MPU-9250, the \textit{BYPAS{\_}EN} bit in the \textit{INT Pin / Bypass Enable Configuration} register of the MPU-9250 has to be set. Further details about this can be found in  \href[page=23]{./datasheets/MPU9250 Datasheet.pdf}{Page 23 - Datasheet}. The initialization snippet is shown below.\\
+
+\begin{minted}[linenos=true]{c}
+/* Enable access to Magnetometer via MPU-9250 */
+// Set bypass mode for external I2C master connection
+I2C_WriteByte(MPU9250_ADDRESS, INT_PIN_CFG, 0x22, 1);	
+
+// Verify magnetometer device ID
+uint8_t data = I2C_ReadByte(MAG_ADDRESS, MAG_WIA);
+if (data != MAG_WIA_VALUE) _Error_Handler(__FILE__, __LINE__);
+
+// Reset magnetometer
+I2C_WriteByte(MAG_ADDRESS, MAG_CNTL2, 0x01, 1);
+\end{minted}
+
+\bigskip
+
+\subsubsection{Magnetometer Biases}
 Magnetometers are wonderful devices and absolutely essential for correcting gyro drift in applications that require absolute orientation through sensor fusion. The bane of magnetometer usage is, however, their non-ideal response surfaces. The ideal response surface for a three-axis magnetometer is a sphere centered at the 3D origin. This means the response to an external magnetic field of, let's say 400 milliGauss (mG) in the z-direction would be exactly Mz = 400 mG when the magnetometers z-axis was normal to the floor, My = 400 mG when the magnetometer's y-axis was normal to the floor, and Mx = 400 mG when the magnetometer's x-axis was normal to the floor. More simply, the ideal response surface no matter the orientation of the magnetometer is a sphere with radius 400 mG centered on the origin. In practice, MEMS magnetometers are rarely so well calibrated when you receive them. There are good reasons for this. The MEMS sensors are typically characterized at the factory but mounting on a PC board can add stresses that can easily result in a shift of the calibration.\cite{kris}\\
 
-There is an additional common type of magnetometer bias often encountered which is due to the presence of man-made sources of magnetic field like big steel buildings and current carrying wires, etc. Encounters with these environmental sources of magnetic field can be interpreted as changes in orientation if a magnetic anomaly algorithm is not employed to detect and prevent it.\cite{kris}\\
+\clearpage
+
+\subsubsection{Sensor Initialization}
+The first set of calibration process is to compensate the raw data with the help of factory calibrated data. The factory sensitivity adjustment data for each axis is stored in fuse ROM on shipment. These scaling factors can be read from the ROM as follows.\\
+
+\begin{minted}[linenos=true]{c}
+// Power down magnetometer		
+I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x00, 1);	
+
+// Enter Fuse ROM access mode	
+I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x0F, 1); 	
+
+// Read calibration registers for sensitivity adjustment values
+uint8_t rawData[3];
+I2C_ReadByteArray(MAG_ADDRESS, MAG_ASAX, rawData, 3);
+
+// Calculate and store the adjusted measurement data
+magCalib.x =  (float)(rawData[0] - 128)/256.0f + 1.0f;   
+magCalib.y =  (float)(rawData[1] - 128)/256.0f + 1.0f;
+magCalib.z =  (float)(rawData[2] - 128)/256.0f + 1.0f;
+\end{minted}
+
+\bigskip
+
+AK8963 has seven \href[page=13]{./datasheets/AK8963.pdf}{operation modes}. \href[page=15]{./datasheets/AK8963.pdf}{Continuous measurement mode 2} is used in our case. Sensor is measured periodically in 100Hz in this mode and the configuration snippet is shown below.\\
+
+\begin{minted}[linenos=true]{c}
+// Power down magnetometer
+I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x00, 1);
+
+// Res: 16 Bit, Mode: Continuous Mode 2 (100Hz)		
+I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x16, 1); 
+\end{minted}
+
+\bigskip
+\bigskip
+
+In spite of the factory calibration, the problem of non-ideal response of the sensor in various axes, which was mentioned earlier, still persists. The data plotted in \textit{\autoref{fig:magraw}} was taken by slowly turning the sensor board through a variety of figure-eight patterns. The data is properly-scaled (mG) Mx, My, and Mz values plotted using \textit{Matplotlib} in Python. Following are the observations that can be inferred from the uncalibrated sensor data.\\
+
+\bigskip
 
 \begin{figure}[!htb]
 \centering
@@ -360,14 +514,12 @@ There is an additional common type of magnetometer bias often encountered which 
 \label{fig:magraw}
 \end{figure}
 
-The data plotted in \textit{\autoref{fig:magraw}} was taken by slowly turning the sensor board through a variety of figure-eight patterns. The data is properly-scaled (mG) Mx, My, and Mz values plotted using \textit{Matplotlib} in Python. Following are the observations that can be inferred from the uncalibrated sensor data.\\
-
 \begin{enumerate}
 \item The response between axes is not centered at the origin.
 \item The response sensitivity is different along each axis. 
 \end{enumerate}
 
-These are often referred to as hard iron and soft iron biases, respectively.\\
+These are often referred to as hard iron and soft iron biases, respectively. Calculating these biases is explained in \textit{Section \ref{sssec:mag_calib}}. \\
 
 \textbf{Hard iron biases} are typically the largest and the easiest errors to correct for. The simplest way to correct for them is to record a bunch of magnetometer data as the sensor is moved slowly in a figure eight pattern and keep track of the minimum and maximum field measured in each of the six principal directions; +/- Mx, +/- My, +/- Mz. Once the min/max values along the three axes are known, the average can be subtracted from the subsequent data which amounts to re-centering the response surface on the origin \cite{kris}. \textit{\autoref{fig:magoffset}} shows the hard iron bias calibrated sensor data.\\
 
@@ -388,12 +540,116 @@ These are often referred to as hard iron and soft iron biases, respectively.\\
 \clearpage
 \textbf{Soft iron bias} correction is re-scaling the axial response to make is even more spherical. It means deconstructing the response surface into its elliptical principle axes and devising a 3 x 3 correction matrix to transform the general ellipsoidal response surface into a spherical one. The min/max values which are already computed are used to rescale the magnetometer data and compute a scale factor for all three axes. Finally, the calibrated sensor data is shown in \textit{\autoref{fig:magscale}}.\cite{kris}\\
 
+\subsubsection{Reading the Sensor Data}
+Once all of the initialization and calibration is performed, the data can be read from the sensor now. There are certain points to note before we can read the data. When measurement data is stored and ready to be read, DRDY (Data Ready) bit in ST1 register turns to \textit{“1”} and this condition has to be checked first \textit{(line 2)}.\\
+
+AK8963 has the limitation for measurement range that the sum of absolute values of each axis should be smaller than 4912$\mu$T.
+
+\begin{center}
+$\mid X \mid + \mid Y \mid + \mid Z \mid  <  4912 \mu T$
+\end{center}
+
+When the magnetic field exceeds this limitation, data stored at measurement data is not correct. This is called Magnetic Sensor Overflow. When magnetic sensor overflow occurs, HOFL bit in ST2 register turns to \textit{“1”}. When the next measurement starts, it returns to \textit{“0”} \textit{(line 9)}. Also it is necessary that a read operation on the ST2 register has to be performed in order to initiate the next conversion cycle \textit{(line 5)}.\\ 
+
+Another thing to note is, unlike the MPU-9250, the raw data here is available as low byte first, then the high byte. Once the raw data has packed into 16-bit the factory calibration is applied. Now, the raw data has to be converted to milliGauss and \textit{mRes} is the conversion factor.
+
+\begin{center}
+$ mRes = 10.0 \times 4912.0/32760.0$
+\end{center}
+
+\bigskip
+
+The final step is to compensate the converted data with the hard and soft iron biases. Calculating these biases is explained in \textit{Section \ref{sssec:mag_calib}}.\\ 
+
+\begin{minted}[linenos=true]{c}
+// Check if data is ready
+if (I2C_ReadByte(MAG_ADDRESS, MAG_ST1, __FILE__, __LINE__) & 0x01)
+{
+  // Read data registers and ST2 register to check overflow
+  I2C_ReadByteArray(MAG_ADDRESS, MAG_HXL, raw_data, 7, __FILE__, __LINE__);
+  uint8_t OVF = raw_data[6];
+
+  // Store data if no overflow occurred
+  if (!(OVF & 0x08))
+  {
+    // Pack into 16-bit data
+    magRaw.x = (int16_t) ((raw_data[1]<<8) | raw_data[0]);
+    magRaw.y = (int16_t) ((raw_data[3]<<8) | raw_data[2]);
+    magRaw.z = (int16_t) ((raw_data[5]<<8) | raw_data[4]);
+
+    // Apply the factory calibration and conversion factors
+    magData.x = (float) magRaw.x * mRes * magCalib.x; 
+    magData.y = (float) magRaw.y * mRes * magCalib.y; 
+    magData.z = (float) magRaw.z * mRes * magCalib.z; 
+    
+    // Apply the hard iron and soft iron bias corrections
+    magData.x = (magData.x - magBias.x) * magScale.x;
+    magData.y = (magData.y - magBias.y) * magScale.y;
+    magData.z = (magData.z - magBias.z) * magScale.z;
+}
+\end{minted}
+
+\subsubsection{Magnetometer Calibration}
+\label{sssec:mag_calib}
+
+Currently, the hard and soft iron bias calibration is not implemented in the firmware and has to performed externally. To do this, the converted magnetometer readings are just printed on the serial terminal and then stored as \textit{*.csv} file. The calibration is done using a Python script. The \textit{*.csv} file of uncalibrated readings are read and the following steps are carried out in order to get the bias values.\\
+
+\begin{enumerate}
+\item Find out the maximum and the minimum values for each of the axes from the data samples.\\
+\item Find the average of the maximum and the minimum values.\\
+\item This average value is nothing but the hard iron bias value.\\
+\item To find out the soft iron bias, calculate the range of the data samples. This is just the difference between the maximum and minimum value.\\
+\item Find out the average of the range of all the three axes.\\
+\item The average value divided by the range of each axis gives the scaling factor for that respective axis. This is the soft iron bias.\\
+\end{enumerate}
+
+Following is a snippet from the \textit{mag-calib.py} Python script, implementating the calibration process.\\
+
+\begin{minted}[linenos=true]{python}
+# max_ and min_ are lists which store the maximum and minimum 
+# values for the three axes, from the data samples
+for i in range(0,3):
+    # Find the hard iron bias
+    bias[i] = (max_[i] + min_[i])/2
+    
+    # Find the range to calculate soft iron bias
+    range_[i] = max_[i] - min_[i]
+
+# Average of the range of three axes
+avg = (range_[0] + range_[1] + range_[2])/3
+
+# Calculate the scaling factor or the soft iron bias for each axis
+for i in range(0,3):
+    scale[i] = avg/range_[i]
+\end{minted}
+
+\bigskip
+
+There is an additional common type of magnetometer bias often encountered which is due to the presence of man-made sources of magnetic field like big steel buildings and current carrying wires, etc. Encounters with these environmental sources of magnetic field can be interpreted as changes in orientation if a magnetic anomaly algorithm is not employed to detect and prevent it. This is beyond the scope of the project right now and can be dealt with in future developement of the firmware. \cite{kris}
+
 \subsection{Sensor Fusion using Madgwick's AHRS Filter}
 A MARG (Magnetic, Angular Rate, and Gravity) sensor is a hybrid IMU which incorporates a tri-axis magnetometer. An IMU alone can only measure an attitude (pitch and roll angles) relative to the direction of gravity which is sufficient for many applications. MARG systems, also known as AHRS (Attitude and Heading Reference Systems) are able to provide a complete measurement of orientation relative to the direction of gravity and the earth's magnetic field.\cite{madgwick}\\
 
 The task of an orientation filter is to compute a single estimate of orientation through the optimal fusion of gyroscope, accelerometer and magnetometer measurements. The Kalman filter has become the accepted basis for the majority of orientation filter algorithms. However, implementation of these filters demand a large computational load and not very efficient for embedded systems.\cite{madgwick}\\
 
 Madgwick's algorithm uses a quaternion representation, allowing accelerometer and magnetometer data to be used in an analytically derived and optimised gradient descent algorithm to compute the direction of the gyroscope measurement error as a quaternion derivative. The library for Madgwick's AHRS filter is available \href{http://x-io.co.uk/open-source-imu-and-ahrs-algorithms/}{here} and further details of the working of the filter can be found \href{./datasheets/Madgwick Internal Report.pdf}{here}.\cite{madgwick}\\
+
+Following is a snippet which shows how to use the AHRS filter. Notice the change in sign and axis while passing the IMU data to the filter. \textit{AHRS{\_}Angle} is a float array to store the filtered angles.\\
+
+\begin{minted}[linenos=true]{c}
+// Set integration time by time elapsed since last filter update
+AHRS_timeNow = millis();
+float delta = (float)((AHRS_timeNow - AHRS_lastUpdate)/1000.0f) ;
+MadgwickSetDelta(delta);
+AHRS_lastUpdate = AHRS_timeNow;
+
+// Filter data and obtain the angles
+MadgwickQuaternionUpdate(-accelData.y, -accelData.x, accelData.z, 
+	gyroData.y, gyroData.x, -gyroData.z, magData.x, magData.y, 
+	magData.z, AHRS_Angle);
+\end{minted}
+
+\clearpage
 
 \section{Altitude Measurement}
 Altitude can be determined based on the measurement of atmospheric pressure. The greater the altitude, the lower the pressure. When a barometer is supplied with a nonlinear calibration so as to indicate altitude, the instrument is called a pressure altimeter or barometric altimeter. It is very important to know the altitude of a flight and altitude stabilization is required for better control of the quadcopter.
@@ -422,7 +678,7 @@ A trivial problem that follows this is a standard and a secure method of data tr
 \subsection{MultiWii Serial Protocol}
 \textit{MultiWii Serial Protocol} is a part of the MultiWii flight controller firmware and has gained popularity and is currently widely used as the communication protocol in many flight controllers. It is a standard, secure and light weight protocol. MSP operates over UART communication. The data to be sent or received is packed into a frame. Each frame has a header, data payload and a checksum. The frame format is explained in detail below.\\
 
-\textbf{Header} | Every frame begins with the characters \textit{'\$'} followed \textit{'M'}. The next element represents the direction of the data transfer. '$\langle$' indicates that the data is being sent to the quadcopter and '$\rangle$' indicates that the data is being sent from the quadcopter to a PC for telemetry or other purposes. To differentiate different types of data frames being sent (like sensor data, PID values and so on), the MSP frame assigns a 8-bit code for every frame. These range from 100-199 for a frame that is sent to the quadcopter and 200-255 for a frame that is received from the quadcopter. The last element in the header frame is the length of the payload which is useful in parsing the frame.\\
+\textbf{Header} | Every frame begins with the characters \textit{'\$'} followed \textit{'M'}. The next element represents the direction of the data transfer. '$<$' indicates that the data is being sent to the quadcopter and '$>$' indicates that the data is being sent from the quadcopter to a PC for telemetry or other purposes. To differentiate different types of data frames being sent (like sensor data, PID values and so on), the MSP frame assigns a 8-bit code for every frame. These range from 100-199 for a frame that is sent to the quadcopter and 200-255 for a frame that is received from the quadcopter. The last element in the header frame is the length of the payload which is useful in parsing the frame.\\
 
 \textbf{Data Payload} | The payload is of fixed length and varies from frame to frame, depending on the type of the data frame (distinguished by the MSP code). The payload is usually packed and stored in the form a structure in memory in C.\\
 
@@ -551,34 +807,179 @@ M4 = throttle + pitch - roll + yaw  // Front Left
 \bigskip
 
 \section{Wireless Joystick Controller}
-A very common method of piloting drones is by using a RC transmitter with 6-8 channels. In this project an USB-HID gamepad controller is interfaced with Python, which in turn transmits commands (MSP frames) to the quadcopter over Wi-Fi. Other than throttle and direction control for drones, there are certain other controls that must be provided to a pilot for a stable and safe flight. Following is the list of the set of basic controls implemented in the current firmware.\\
+\label{sec:wjc}
+A very common method of piloting drones is by using a RC transmitter with 6-8 channels. In this project an USB-HID gamepad controller is interfaced with Python, which in turn transmits commands (MSP frames) to the quadcopter over Wi-Fi. Other than throttle and direction control for drones, there are certain other controls that must be provided to a pilot for a stable and safe flight. Following is the list of controls implemented in the firmware.\\
 
 \begin{itemize}
-\item \textbf{Throttle} | This sets the base throttle value for all the motors in manual control mode and is used to control the altitude set point in auto flight mode.
+\item \textbf{Throttle} | \textit{Range: 1000 - 2000} | This sets the base throttle value for all the motors in manual control mode and is used to control the altitude set point in auto flight mode.
 
-\item \textbf{Roll} | This channel varies the set point for the roll angle. A change in the roll set point makes the drone move in the left-right direction.
+\item \textbf{Roll} | \textit{Range: -60 - +60} | This channel varies the set point for the roll angle to maneuver the drone in the left-right direction.
 
-\item \textbf{Pitch} | This channel varies the set point for the pitch angle. A change in the pitch set point makes move in the forward-backward direction.
+\item \textbf{Pitch} | \textit{Range: -60 - +60} | This channel varies the set point for the pitch angle to maneuver the drone in the left-right direction.
 
-\item \textbf{Yaw} | This channel varies the set point for the yaw angle. A change in the yaw set point makes the drone rotate either in the clockwise or anti-clockwise direction.
+\item \textbf{Yaw} | \textit{Range: -180 - +180} | This channel varies the set point for the yaw angle rotate the drone either in the clockwise or anti-clockwise direction.
 
-\item \textbf{Arm} | Initially, when the drone in switched on, the motors must be disabled for safety. When the drone is ready for flight, the pilot must enable the motors and this is referred to as Arming the drone.
+\item \textbf{Arm} | \textit{Range: 0 or 2000 on AUX1} | Initially, when the drone in switched on, the motors must be disabled for safety. When the drone is ready for flight, the pilot must enable the motors and this is referred to as Arming the drone.
 
-\item \textbf{Altitude Hold} | This control toggles between manual and auto flight modes. In manual flight mode, the user is responsible for maintaining the altitude by varying the throttle. In auto mode, the drone will hold its current altitude.
+\item \textbf{Altitude Hold} | \textit{Range: 0 or 2000 on AUX2} | This control toggles between manual and auto flight modes. In manual flight mode, the user is responsible for maintaining the altitude by varying the throttle. In auto mode, the drone will hold its current altitude.
 
-\item \textbf{Pitch Trim} | This adds an offset angle to the pitch axis so that drone is perfectly balanced about this axis.
+\item \textbf{Pitch Trim} | \textit{Range: Increments of $\pm$0.4 on AUX3} | Adds an offset angle to the pitch axis so that drone is perfectly balanced about this axis.
 
-\item \textbf{Roll Trim} | This adds an offset angle to the roll axis so that drone is perfectly balanced about this axis.\\
+\item \textbf{Roll Trim} | \textit{Range: Increments of $\pm$0.4 on AUX4} | Adds an offset angle to the roll axis so that drone is perfectly balanced about this axis.\\
 \end{itemize}
 Further details on the usage of the joystick controller in explained in \textit{\autoref{sec:joystick}}.
 
-
 \chapter[Usage and Demonstration]{Usage and Demonstration}
+This chapter covers the usage of the flight controller firmware for a user as well as a developer to continue the development of this firmware.
 
 \section{Firmware Usage}
+The current version of the flight controller firmware is \textit{Firmware Version 1.0.1 targeted for STM32F103C8T6} and is under development at this \href{https://github.com/eYSIP-2017/eYSIP-2017_Control_and_Algorithms_development_for_Quadcopter/tree/master/firmware}{GitHub Repository}.\\
+
+\subsection{Flashing the Firmware}
+Let us begin with building the firmware. The entire firmware is written in C language in the TrueSTUDIO IDE. To build the project, go to \textit{Project | Build Project}. To change the output format, navigate to \textit{Project | Build Settings | Tool Settings | Other | Output Format} and select \textit{Intel Hex}.\\
+
+The Pluto Drone has a ESP8266 and supports wireless programming. CleanFlight Configurator can be used to flash the program. Under \textit{Firmware Flasher} tab, load the \textit{*.hex} file and click \textit{Flash Firmware}. Make sure that the quadcopter is powered on and the computer is connected to the Pluto Drone Wi-Fi. Once it starts to program, all the LED indicators will turn off and will flash in a sequence once the programming is completed.\\
+
+\subsection{Serial Communication Setup}
+\label{ssec:serial}
+For communication with the drone and debugging purposes, it will be easier to do so with the help of serial communication port. But the PC is connected to the drone over Wi-Fi. A virtual COM port can be created with the help of softwares such as \href{https://www.eltima.com/products/serial-over-ethernet/}{Eltima Serial to Ethernet Connector} or \href{http://www.hw-group.com/products/hw_vsp/index_en.html}{HW Virtual Serial Port} which redirects the data from TCP/IP sockets to the COM ports.\\
+
+In case any error occurs on the micro-controller, the LEDs will blink continuously in alternate pattern. The error can debugged by opening the serial terminal which will display the file name and the line number where the error had occurred. Another method which supports real-time debugging is using the ST-LINK which is covered in \textit{\autoref{ssec:stmdebug}}.\\
+
+\subsection{Sensor Calibration}
+Once the basic setup is ready, the next step is to first calibrate the sensor. To do so, open the \textit{MPU9250.c} file and \textbf{define the macro \textit{IMU{\_}DEBUG}} in \textit{MPU9250.c} file. In the \textit{main.c} file, make sure you first call the \textit{IMU{\_}Init()} function and then just call the required sensor read function. This will print the converted data on the serial terminal.\\ 
+
+\begin{minted}[linenos=true]{c}
+void setup(void)
+{
+  Devices_Init();
+  serialBegin();
+  IMU_Init();
+}
+
+void main()
+{
+  while(1)
+  {
+    // To read and print the gyro data in dps
+    MPU9250_ReadGyroData()
+  
+    // To read and print the magnetometer data in milliGauss
+    //AK8963_ReadData();
+  
+    // Delay to avoid hanging of the serial terminal
+    delay_ms(100);
+  }
+}
+\end{minted}
+
+\bigskip
+
+To calibrate the gyroscope, \textit{gyroBias} should be set to \textit{\{0, 0, 0\}} in \textit{MPU9250.c} file. Now keep the gyroscope sensor still and open the serial terminal. Once the data is printed on the serial terminal (around 500 samples), copy it into a spreadsheet and find out the average. Replace these average values to the \textit{gyroBias} struct initialization.\\
+
+To calibrate the magnetometer, \textit{magBias} and \textit{magScale} should be set to \textit{\{0, 0, 0\}} in \textit{MPU9250.c}. Build, flash the firmware and open the serial terminal. Move and rotate the sensor through a variety of figure-8 patterns and do it for around 1000 samples. Copy this data into a spreadsheet and save it as a \textit{*.csv} file. Use the \textit{mag-calib.py} Python script and set the file name to the \textit{*.csv} with the data samples. Run the script and the hard iron and soft iron biases will be displayed. A plot similar to the one shown in \textit{\autoref{fig:magscale}} will pop-up as well. The response should be almost spherical in all the axes and must be centered at the origin. Replace the \textit{magBias} struct initialization values with hard iron bias values and \textit{magScale} with the soft iron biases.\\
+
+\subsection{Using the MultiWii Serial Protocol Library}
+MSP can be used for communication and telemetry by calling the \textit{MSP{\_}Update()} function in \textit{main.c} file. Ideally, this should be sufficient for both, sending and receiving MSP frame. However, there are certain issues with it currently and the UART communication process hangs (\textit{Refer \autoref{sec:bugs}}). As of now, only receiving MSP frames work with \textit{MSP{\_}Update()} and can is sufficient to interface the joystick controller. To send MSP frames for telemetry, you have to add the following snippet in the \textit{taskScheduler()} in \textit{main.c} file.\\
+
+\begin{minted}[linenos=true]{c}
+if ((millis() - last_tick) > 100)
+{
+  /** Save Time */
+  last_tick = millis();
+
+  /* Telemetry */
+  MSP_SendIdent();
+  MSP_SendStatus();
+  MSP_SendMotor();
+  MSP_SendAttitude();
+  MSP_SendAltitude();
+  MSP_SendRawIMU();
+  MSP_SendPID();
+}
+\end{minted}
+
+\bigskip
+
+The following snippet is an example to update a particular MSP frame and can be done in any other file by just including the \textit{msp.h} header file.\\
+
+\begin{minted}[linenos=true]{c}
+#include "msp.h"
+
+// MSP frame structure to hold the PID data to be sent
+extern msp_pid msp_txf_pid;
+
+void PID_UpdateMSP()
+{
+  // Update pitch PID gains
+  msp_txf_pid.pitch.p = pid_pitch.con_KP * 255;
+  msp_txf_pid.pitch.i = pid_pitch.con_KI * 255;
+  msp_txf_pid.roll.d = pid_pitch.con_KD * 255;
+
+  // Update roll PID gains
+  msp_txf_pid.roll.p = pid_roll.con_KP * 255;
+  msp_txf_pid.roll.i = pid_roll.con_KI * 255;
+  msp_txf_pid.roll.d = pid_roll.con_KD * 255;
+
+  // Update yaw PID gains
+  msp_txf_pid.yaw.p = pid_yaw.con_KP * 255;
+  msp_txf_pid.yaw.i = pid_yaw.con_KI * 255;
+  msp_txf_pid.yaw.d = pid_yaw.con_KD * 255;
+}
+\end{minted}
+
+\clearpage
+
+When using the {MSP{\_}Update()} function, once a MSP frame is received, the frame is parsed and a callback function is called based on the MSP code. These callback function are defined with the \href{http://www.keil.com/support/man/docs/armcc/armcc_chr1359124970859.htm}{\textit{{\_\_}weak}} symbol and are not implemented in the \textit{msp.c} file.\\
+
+\begin{minted}[linenos=true]{c}
+__weak void MSP_SetMotor_Callback()
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(MSP_SET_MOTOR);
+  
+  /* NOTE: This function can be modified, when the callback is needed,
+  or MSP_SetMotor_Callback() can be implemented in the user file*/
+}
+\end{minted}
+
+\bigskip
+
+The user must implement this function in any other file, but without the {\textit{{\_\_}weak} symbol. For example, the following snippet implements the callback for receiving the motor PWM values sent from a PC.\\
+
+\begin{minted}[linenos=true]{c}
+#include "msp.c"
+
+extern msp_set_motor msp_rxf_motor;
+
+void MSP_SetMotor_Callback()
+{
+  float m1, m2, m3, m4;
+
+  m1 = constrain(msp_rxf_motor.motor[0] - 1000, 0, 1000);
+  m2 = constrain(msp_rxf_motor.motor[1] - 1000, 0, 1000);
+  m3 = constrain(msp_rxf_motor.motor[2] - 1000, 0, 1000);
+  m4 = constrain(msp_rxf_motor.motor[3] - 1000, 0, 1000);
+
+  Motor_SetRawSpeed(m1, m2, m3, m4);
+}
+\end{minted}
+
+\clearpage
 
 \section{Wireless Joystick Controller}
 \label{sec:joystick}
+
+To pilot the quadcopter and to control the various flight parameters, a joystick controller is required. In this project, the Xbox\textregistered} One Controller\cite{xbox} is used. this controller is a USB-HID Gamepad compliant device and is interfaced with Python with the help \textit{pygame} module. The inputs from the controller are read, parsed, converted and then packed into MSP frames and sent to the quadcopter. The communication process is same as explained in \textit{\autoref{ssec:serial}}.\\
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{images/joystick_controls}
+\caption{Labeled diagram showing the mapping of the different controls on the Xbox\textregistered One Controller\cite{xbox}}
+\label{fig:joycon}
+\end{figure}
+
+To use the joystick controller, just plug in the controller to any USB port and run the \textit{joystick-xbox.py} script. This script depends on the \textit{MultiWii.py} module. A CLI will open as shown in \textbf{FIG HERE}. First Arm the drone, then gradually increase the throttle. The various controls are explained in \textit{\autoref{sec:wjc}}.\\
 
 \section{Results and Demonstration}
 
@@ -606,14 +1007,50 @@ Another aspect of a flight controller firmware is that it should be somewhat mor
 
 \item \textbf{Error Handling} | There are several sources of error that may occur in the firmware such as I2C errors, UART errors and so on. Currently if an error occurs, the program control transfers into a while loop and prints the file name and line number on the serial terminal, at where the error had occurred. To make the firmware more robust and safe, better error handling can be implemented.\\  
 
-\item \textbf{Custom Joystick Controller} | In this project, a XBOX One USB-HID gamepad controller is used. In the future a custom wireless controller can be developed from scratch using the ESP8266 Wi-Fi module.
+\item \textbf{Custom Joystick Controller} | In this project, a Xbox$^{\tiny{\textregistered}}$ One \cite{xbox} USB-HID gamepad controller is used. In the future a custom wireless controller can be developed from scratch using the ESP8266 Wi-Fi module.
 
 \end{itemize}
 
 \chapter[Bug Report and Challenges]{Bug Report and Challenges}
-Any issues in code and hardware.
+\section{Bug Report}
+\label{sec:bugs}
 
-Any failure or challenges faced during project
+Following is a list of several bugs with fixes as well as some bugs that are not fixed yet. Currently, the \textit{{\_}Error{\_}Handler()} function in \textit{peripherals.c} only prints the file name and the line at which the error occurs. The user has to manually debug the error.\\
+
+\begin{enumerate}
+\item \textbf{Bug} | Peripheral driver function or some macros not defined.\\
+\textbf{Fix} | Recheck the peripheral driver library used. The two libraries available are Standard Peripheral Library and STM32Cube HAL library. Refer \textit{Section \ref{sec:progstm32}}.\\
+
+\item \textbf{Bug} | I2C read or write error.\\
+\textbf{Fix} | Recheck SCL/SDA connections. Check the initialization of I2C bus in \textit{peripherals.c}. I2C error also occurs when the sensor is not powered properly or the battery is low.\\
+
+\item \textbf{Bug} | Incorrect readings of IMU data.\\
+\textbf{Fix} | Check if scaling factor has been chosen properly and the full scale range settings are correct. Check if the typecasting is done correctly when packing the high and low byte into a 16-bit signed value.\\
+
+\item \textbf{Bug} | I2C error while interfacing the Magnetometer.\\
+\textbf{Fix} | Check if the magnetometer has been enable via the MPU-9250 as the auxiliary sensor. Refer \textit{Section \ref{ssec:akmag}}.\\
+
+\clearpage
+
+\item \textbf{Bug} | AHRS filtered angles are drifting.\\
+\textbf{Fix} | Check if the AHRS integration time is set properly. Check if the beta value has been set (0.6). Gyroscope rate should be in radians per second for the AHRS filter, however, the rate is senr in dps and is internally converted to rps in \textit{MadgwickAHRS.c} file.\\
+
+\item \textbf{Bug} | Yaw angle is drifting or always converging to a particular angle when rotated.\\
+\textbf{Fix} | Magnetometer requires hard and soft iron calibration to be performed as the bias value will change quite often.\\
+
+\item \textbf{Bug} | Used I2C{\_}ReadByteArray for reading the 3 bytes from the MS5611 ADC register.\\
+\textbf{Fix} | Perform multiple read using from the same register using I2C{\_}ReadBytes (Note the 's') and specify the number of bytes to be read in the function call (Here it is 3). I2C{\_}ReadByteArray is used to read only one byte from a series of continuosly incrementing registers.\\
+
+\item \textbf{Bug} | UART interrupt communication not working.\\
+\textbf{Fix} | UART interrupts have callback functions defined with \textit{{\_\_}weak} attribute and must be implemented in the user file.\\
+
+\item \textbf{Bug} | MSP two-way communication not working \textit{or} MSP not working with MultiWii Conf.\\
+\textbf{Possible Fix} | Currently there is a problem with UART communication when multiple frames or large amount of serial data is sent and received together. One of the possible solutions would be to use UART interrupts for sending data as well. Another solution would be to use the UART DMA peripheral.\\
+
+\item \textbf{Bug} | \textit{micros()} function does not work properly.\\
+\textbf{Possible Fix} | Currently the implementation of \textit{micros()} and \textit{millis()} is the same. \textit{micros()} does not work properly, when the SysTick is configured to interrupt every \SI{1}{\micro\second}.\\
+
+\end{enumerate}
 
 %-------------------------------------------------------------------
 
@@ -636,6 +1073,9 @@ STMicroelectronics, \href{./datasheets/STM32F1 HAL Manual.pdf}{\textit{STM32F1xx
 
 \bibitem{carmine}
 Carmine Noviello, \href{http://www.carminenoviello.com/2014/12/28/setting-gcceclipse-toolchain-stm32nucleo-part-1/}{\textit{Setting up a GCC/Eclipse toolchain for STM32Nucleo - Part 1}}
+
+\bibitem{fifo}
+Simply Embedded, \href{http://www.simplyembedded.org/tutorials/interrupt-free-ring-buffer/}{\textit{UART Receive Buffering}}
 
 \bibitem{ahrswiki}
 Wikipedia Article, \href{https://en.wikipedia.org/wiki/Attitude_and_heading_reference_system}{\textit{Attitude and heading reference system}}
@@ -662,19 +1102,12 @@ Sebastian O.H. Madgwick, \href{./datasheets/Madgwick Internal Report.pdf}{\texti
 \bibitem{kada}
 V. Kadamatt, \href{http://www.droneybee.com/quadcopter-blade-rotation-lift/}{\textit{Quadcopter blade rotation and lift : How and why}}
 
-\bibitem{fifo}
-Simply Embedded, \href{http://www.simplyembedded.org/tutorials/interrupt-free-ring-buffer/}{\textit{UART Receive Buffering}}
-
-%\bibitem{},\href{}{\textit{}}
-%\bibitem{},\href{}{\textit{}}
-%\bibitem{},\href{}{\textit{}}
+\bibitem{xbox}
+Xbox$^{\tiny{\textregistered}}$ One is a trademark of Microsoft Corporation. The Xbox\textsuperscript{\textregistered}} Logos are trademarks of Microsoft$^{\tiny{\textregistered}}$ Corporation.
 
 \end{thebibliography}
 
 %-------------------------------------------------------------------
-
-\chapter*[]{Appendix A: Circular Buffer}
-\addcontentsline{toc}{chapter}{Appendix A: Circular Buffer}
 
 \end{document}
 

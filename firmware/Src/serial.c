@@ -7,6 +7,7 @@
  * Transmit --> Blocking
  * Receive 	--> Non-Blocking (Interrupts) + FIFO
  */
+
 #include "stm32f1xx_hal.h"
 #include "peripherals.h"
 #include "msp.h"
@@ -20,7 +21,6 @@ extern CircularBuffer rxc;
 
 unsigned char rx_buffer[2];
 char tx_buffer[100];
-volatile uint32_t serial_last_tick = 0;
 
 int serialAvailable()
 {

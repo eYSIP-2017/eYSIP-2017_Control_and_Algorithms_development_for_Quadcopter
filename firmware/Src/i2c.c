@@ -37,12 +37,12 @@ void I2C_WriteByte(uint16_t device_add, uint16_t register_add, uint8_t register_
  Return Value	:	Register value
  Example Call	:	IMU_ReadByte()
  ***********************************/
-uint8_t I2C_ReadByte(uint16_t device_add, uint16_t register_add)
+uint8_t I2C_ReadByte(uint16_t device_add, uint16_t register_add, char* file, int line)
 {
 	uint8_t byte[] = {0x00}, ret;
 	ret = HAL_I2C_Mem_Read(&hi2c1, (uint16_t) device_add, (uint16_t) register_add,
 				I2C_MEMADD_SIZE_8BIT, byte, 1, 200);
-	if (ret != HAL_OK) _Error_Handler(__FILE__, __LINE__);
+	if (ret != HAL_OK) _Error_Handler(file, line);
 	return byte[0];
 }
 
@@ -53,12 +53,12 @@ uint8_t I2C_ReadByte(uint16_t device_add, uint16_t register_add)
  Return Value	:	Register value
  Example Call	:	I2C_ReadBytes()
  ***********************************/
-void I2C_ReadBytes(uint16_t device_add, uint16_t register_add, uint8_t* bytes, uint16_t size)
+void I2C_ReadBytes(uint16_t device_add, uint16_t register_add, uint8_t* bytes, uint16_t size, char* file, int line)
 {
 	uint8_t ret;
 	ret = HAL_I2C_Mem_Read(&hi2c1, (uint16_t) device_add, (uint16_t) register_add,
 				I2C_MEMADD_SIZE_8BIT, bytes, size, 200);
-	if (ret != HAL_OK) _Error_Handler(__FILE__, __LINE__);
+	if (ret != HAL_OK) _Error_Handler(file, line);
 }
 
 /**********************************
@@ -68,11 +68,11 @@ void I2C_ReadBytes(uint16_t device_add, uint16_t register_add, uint8_t* bytes, u
  Return Value	:	None
  Example Call	:	IMU_ReadByteArray()
  ***********************************/
-void I2C_ReadByteArray(uint16_t device_add, uint16_t register_add, uint8_t* byte_array, uint16_t size)
+void I2C_ReadByteArray(uint16_t device_add, uint16_t register_add, uint8_t* byte_array, uint16_t size, char* file, int line)
 {
 	int i = 0;
 	while (i<size)
 	{
-		byte_array[i++] = I2C_ReadByte(device_add, register_add++);
+		byte_array[i++] = I2C_ReadByte(device_add, register_add++, __FILE__, __LINE__);
 	}
 }

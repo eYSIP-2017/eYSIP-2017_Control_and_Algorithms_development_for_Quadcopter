@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{p}{((}\PYG{n}{millis}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{last\PYGZus{}tick}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{c+cm}{/** Save Time */}
+  \PYG{n}{last\PYGZus{}tick} \PYG{o}{=} \PYG{n}{millis}\PYG{p}{();}
+
+  \PYG{c+cm}{/* Telemetry */}
+  \PYG{n}{MSP\PYGZus{}SendIdent}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendStatus}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendMotor}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendAttitude}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendAltitude}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendRawIMU}\PYG{p}{();}
+  \PYG{n}{MSP\PYGZus{}SendPID}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
