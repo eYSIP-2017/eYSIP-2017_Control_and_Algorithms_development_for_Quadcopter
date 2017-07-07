@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+c1}{// Power down magnetometer}
-\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MAG\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MAG\PYGZus{}CNTL1}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
-
-\PYG{c+c1}{// Res: 16 Bit, Mode: Continuous Mode 2 (100Hz)}
-\PYG{n}{I2C\PYGZus{}WriteByte}\PYG{p}{(}\PYG{n}{MAG\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{n}{MAG\PYGZus{}CNTL1}\PYG{p}{,} \PYG{l+m+mh}{0x16}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
-\end{Verbatim}

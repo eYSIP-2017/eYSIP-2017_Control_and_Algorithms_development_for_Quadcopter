@@ -326,7 +326,7 @@ The BSP layer bridges the gap between the device drivers and the application lay
 
 \section{Attitude and Heading Reference System}
 
-One of the most trivial and important tasks of a flight controller firmware is control and stabilization of the orientation of the quadcopter. The three axes of orientation involved are namely pitch, roll and yaw as shown in \autoref{fig:AHRS}\\
+One of the most trivial and important tasks of a flight controller firmware is control and stabilization of the orientation of the quadcopter. The three axes of orientation involved are namely pitch, roll and yaw as shown in \textit{\autoref{fig:AHRS}}\\
 
 An \textit{Attitude and Heading Reference System (AHRS)} consists of sensors on three axes that provide attitude information for aircraft, including roll, pitch and yaw. They are designed to replace traditional mechanical gyroscopic flight instruments and provide superior reliability and accuracy.\cite{ahrswiki}\\
 
@@ -970,24 +970,56 @@ void MSP_SetMotor_Callback()
 \section{Wireless Joystick Controller}
 \label{sec:joystick}
 
-To pilot the quadcopter and to control the various flight parameters, a joystick controller is required. In this project, the Xbox\textregistered} One Controller\cite{xbox} is used. this controller is a USB-HID Gamepad compliant device and is interfaced with Python with the help \textit{pygame} module. The inputs from the controller are read, parsed, converted and then packed into MSP frames and sent to the quadcopter. The communication process is same as explained in \textit{\autoref{ssec:serial}}.\\
+To pilot the quadcopter and to control the various flight parameters, a joystick controller is required. In this project, the Xbox\textsuperscript{\textregistered}} One Controller\cite{xbox} is used. this controller is a USB-HID Gamepad compliant device and is interfaced with Python with the help \textit{pygame} module. The inputs from the controller are read, parsed, converted and then packed into MSP frames and sent to the quadcopter. The communication process is same as explained in \textit{\autoref{ssec:serial}}.\\
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=\textwidth]{images/joystick_controls}
-\caption{Labeled diagram showing the mapping of the different controls on the Xbox\textregistered One Controller\cite{xbox}}
+\caption{Labeled diagram showing the mapping of the different controls on the Xbox\textsuperscript{\textregistered} One Controller\cite{xbox}}
 \label{fig:joycon}
 \end{figure}
 
-To use the joystick controller, just plug in the controller to any USB port and run the \textit{joystick-xbox.py} script. This script depends on the \textit{MultiWii.py} module. A CLI will open as shown in \textbf{FIG HERE}. First Arm the drone, then gradually increase the throttle. The various controls are explained in \textit{\autoref{sec:wjc}}.\\
+To use the joystick controller, just plug in the controller to any USB port and run the \textit{joystick-xbox.py} script. This script depends on the \textit{MultiWii.py} module. A CLI will open as shown in \textit{\autoref{fig:xbox_cli}}. First Arm the drone, then gradually increase the throttle. The various controls are explained in \textit{\autoref{sec:wjc}}.
 
 \section{Results and Demonstration}
+The IMU and magnetometer were successfully interfaced and fused using AHRS filter to get the attitude and heading. The barometer was also interfaced and altitude was estimated.\\
 
-Final Setup Image
+MultiWii Serial Protocol (MSP) was successfully implemented in the firmware and \textit{\autoref{fig:msp_conf}} shows the data obtained from the flight controller. Flight parameters and data like attitude, heading, altitude, motor PWM values, raw IMU data, PID gains and several other data was obtained and visualized in MultiWii Conf, which is open source software written in \textit{Processing}. This is the \textit{link} for the video demonstration of the same.\\
 
-User Instruction for demonstration
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{images/msp_conf}
+\caption{Flight parameters and data visualized in MultiWii Conf software using MSP}
+\label{fig:msp_conf}
+\end{figure}
 
-\href{http://www.youtube.com}{Youtube Link} of demonstration video 
+\bigskip
+
+Fine tuning PID values of a quadcopter flight controller can be very devious and time consuming process if a programmer needs to adjust parameters in source code, compile it and upload the new program to copter every time they want to make a slight adjustment. To make the process of PID tuning easier, a GUI in Python was developed.\\
+
+This GUI helps in tuning the pitch, roll, yaw and throttle axes. MSP is used for communication with the quadcopter. Apart from setting PID gains, one can set the trim for any axis or change the set point. Throttle value can also be set. Various MSP frames such as status, identifier and raw IMU data can also be requested from the drone through this GUI. This is the \textit{link} for the video demonstration of the PID tuning process using the GUI.\\ 
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{images/pid_gui}
+\caption{A GUI developed in Python for tuning of PID parameters}
+\label{fig:pid_gui}
+\end{figure}
+
+\clearpage
+
+The joystick controller was successfully interfaced with Python using the \textit{pygame} module. A CLI in Python was developed to visualize the joystick controls as shown in \textit{\autoref{fig:xbox_cli}}. The various controls supported are shown in \textit{\autoref{fig:joycon}}. Vibration feedback from the joystick to the user is also implemented. This is the \textit{link} for the video demonstration of the joystick controller interfaced.\\
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{images/xbox_cli}
+\caption{A CLI developed in Python for the wireless joystick controller}
+\label{fig:xbox_cli}
+\end{figure}
+
+\bigskip
+
+The PID gains were tuned for pitch, roll and yaw axes and the drone response was quick and stable for each of the axes individually. However, when PID for all three axes was enabled, there were slight offsets due to shift in CG. Successful flight was achieved upto a height of \SI{5}{\m}. However, due to certain offsets, the drone drifts quite a lot in the pitch and roll axis and the flight is not very stable. This is the \textit{link} for the video demonstration of the quadcopter flight.\\
 
 \chapter[Future Work]{Future Work}
 A flight controller firmware is a very complex one as it has to support various hardware devices and should be designed in a way such that the addition of new hardware or expansion in functionality must be an easy process. For example, if a new module such as GPS or XBee communication is required, such a change must easily be able to be incorporated into the the current firmware.\\
@@ -1007,7 +1039,7 @@ Another aspect of a flight controller firmware is that it should be somewhat mor
 
 \item \textbf{Error Handling} | There are several sources of error that may occur in the firmware such as I2C errors, UART errors and so on. Currently if an error occurs, the program control transfers into a while loop and prints the file name and line number on the serial terminal, at where the error had occurred. To make the firmware more robust and safe, better error handling can be implemented.\\  
 
-\item \textbf{Custom Joystick Controller} | In this project, a Xbox$^{\tiny{\textregistered}}$ One \cite{xbox} USB-HID gamepad controller is used. In the future a custom wireless controller can be developed from scratch using the ESP8266 Wi-Fi module.
+\item \textbf{Custom Joystick Controller} | In this project, a Xbox\textsuperscript{\textregistered} One \cite{xbox} USB-HID gamepad controller is used. In the future a custom wireless controller can be developed from scratch using the ESP8266 Wi-Fi module.
 
 \end{itemize}
 
@@ -1103,7 +1135,7 @@ Sebastian O.H. Madgwick, \href{./datasheets/Madgwick Internal Report.pdf}{\texti
 V. Kadamatt, \href{http://www.droneybee.com/quadcopter-blade-rotation-lift/}{\textit{Quadcopter blade rotation and lift : How and why}}
 
 \bibitem{xbox}
-Xbox$^{\tiny{\textregistered}}$ One is a trademark of Microsoft Corporation. The Xbox\textsuperscript{\textregistered}} Logos are trademarks of Microsoft$^{\tiny{\textregistered}}$ Corporation.
+Xbox\textsuperscript{\textregistered} One is a trademark of Microsoft Corporation. The Xbox\textsuperscript{\textregistered} Logos are trademarks of Microsoft\textsuperscript{\textregistered} Corporation.
 
 \end{thebibliography}
 
