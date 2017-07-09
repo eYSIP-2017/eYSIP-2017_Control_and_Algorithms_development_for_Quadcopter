@@ -4,9 +4,9 @@ The project deals with the study of control algorithms for Quadcopter. The goal 
 ### Repository contents
 - data_samples - Contains the set of uncalibrated and calibrated sensor data
 - documents - Contains the project report, datasheets, tutorials, project poster and progress presentation files
-- drone_resources - Contains resources and datasheets of Pluto Drone provided by Drone Aviation
+- drone_resources - Contains resources and datasheets of Pluto Drone provided by Drona Aviation
 - firmware - Contains all the project files for the flight controller firmware
 - hardware_testing - Contains all the hardware testing project files
 - python - Contains the python scripts for GUIs, joystick controller files and MSP library
 - resources - Contains resources on STM32 programming
-- stl - Contains the *.stl files for 3D printing propeller guards
+- stl - Contains the stl files for 3D printing propeller guards
