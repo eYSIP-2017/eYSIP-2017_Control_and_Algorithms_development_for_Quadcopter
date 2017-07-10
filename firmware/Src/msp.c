@@ -39,25 +39,48 @@ msp_set_head msp_rxf_head;
 msp_set_motor msp_rxf_motor;
 msp_set_led msp_rxf_led;
 
+/**********************************
+ Function name	:	MSP_SendFrame
+ Functionality	:	To create and send MSP frames
+ Arguments		:	MSP message ID, byte array, array length
+ Return Value	:	None
+ Example Call	:	MSP_SendFrame(MSP_PIDNAMES, buff, data_length)
+ ***********************************/
 static void MSP_SendFrame(uint8_t code, uint8_t *data, uint16_t data_length)
 {
 	uint8_t checksum = 0;
 
 	// Send Header
 	serialPrint("$M>");
+
+	// Send data length
 	serialWrite(data_length);
+
+	// Send MSP message ID
 	serialWrite(code);
+
+	// Update checksum
 	checksum = code ^ data_length;
 
+	// Send byte array and update checksum
 	for (int i=0; i<data_length; i++)
 	{
 		serialWrite((char) data[i]);
 		checksum ^= data[i];
 	}
+
+	// Send checksum
 	serialWrite(checksum);
 }
 
-static void MSP_ResetFrameBuffer()
+/**********************************
+ Function name	:	MSP_ResetFrameBuffer
+ Functionality	:	To reset all the RX frame parsing parameters
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_ResetFrameBuffer()
+ ***********************************/
+static void MSP_ResetFrameBuffer(void)
 {
 	rxf.count = 0;
 	rxf.length = 0;
@@ -69,12 +92,21 @@ static void MSP_ResetFrameBuffer()
 		rxf.buffer[i] = 0;*/
 }
 
+/**********************************
+ Function name	:	MSP_ParseFrame
+ Functionality	:	To parse request and command frames
+ 	 	 	 	 	If request frame --> Send the required MSP frame (TX frame request)
+ 	 	 	 	 	If command frame --> Invoke callback function (RX frame)
+ Arguments		:	MSP message ID, byte array, array length, request to send status
+ Return Value	:	None
+ Example Call	:	MSP_ParseFrame(code, fbuffer, data_length, RTS)
+ ***********************************/
 static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, uint8_t RTS)
 {
 	switch (code)
 	{
 		case MSP_IDENT:
-			if (RTS) MSP_SendIdent();													// Send Identifier data on RTS
+			if (RTS) MSP_SendIdent();											// Send Identifier data on RTS
 			break;
 
 		case MSP_STATUS:
@@ -82,11 +114,11 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 			break;
 
 		case MSP_RAW_IMU:
-			if (RTS) MSP_SendRawIMU();													// Send Raw IMU data on RTS
+			if (RTS) MSP_SendRawIMU();											// Send Raw IMU data on RTS
 			break;
 
 		case MSP_MOTOR:
-			if (RTS) MSP_SendMotor();													// Send Motor data on RTS
+			if (RTS) MSP_SendMotor();											// Send Motor data on RTS
 			break;
 
 		case MSP_RC:
@@ -181,14 +213,16 @@ static void MSP_ParseFrame(uint8_t code, uint8_t *data, uint16_t data_length, ui
 	}
 }
 
-/** Public functions */
-void MSP_Update()
-{
-	serialPrint("\n\nCount: ");
-	serialInt(rxf.count);
-	serialPrint("\nAvail: ");
-	serialInt(serialAvailable());
 
+/**********************************
+ Function name	:	MSP_Update
+ Functionality	:	Non-blocking function to read and parse RX MSP frames
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_Update()
+ ***********************************/
+void MSP_Update(void)
+{
 	if (serialAvailable() == 0) return;
 
 	/* Check '$' header element */
@@ -262,30 +296,68 @@ void MSP_Update()
 	else rxf.count = 0;
 }
 
-void MSP_Read()
+/**********************************
+ Function name	:	MSP_Read
+ Functionality	:	Blocking function to read and parse RX MSP frames
+ 	 	 	 	 	This requires all of the frame data to be received before hand
+ 	 	 	 	 	Deprecated, use MSP_Update()
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_Read()
+ ***********************************/
+void MSP_Read(void)
 {
+	// Buffer to store payload
 	uint8_t fbuffer[50];
+
+	// Request/command frame status
 	uint8_t RTS = 0;
-	while (serialRead() == '$');
+
+	// Check header
+	if (serialRead() != '$') return;
 	if (serialRead() != 'M') return;
 	if (serialRead() != '<') return;
+
+	// Read data length
 	uint8_t data_length = serialRead();
+
+	// Read MSP message ID
 	uint8_t code = serialRead();
+
+	// Update checksum
 	uint8_t checksum = code ^ data_length;
+
+	// Length = 0 --> Request frame
+	// Length > 0 --> Command frame
 	if (data_length != 0)
 	{
+		// Command frame
 		for (int i=0; i<data_length; i++)
 		{
+			// Store data and update checksum
 			fbuffer[i] = serialRead();
 			checksum ^= fbuffer[i];
 		}
 	}
+
+	// Request frame received
 	else RTS = 1;
+
+	// Verify checksum
 	if (checksum != serialRead()) return;
+
+	// Parse the payload
 	MSP_ParseFrame(code, fbuffer, data_length, RTS);
 }
 
-void MSP_Init()
+/**********************************
+ Function name	:	MSP_Init
+ Functionality	:	To send MSP status and identifier frame to MultiWii Conf
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_Init()
+ ***********************************/
+void MSP_Init(void)
 {
 	for (int i=0; i<2; i++)
 	{
@@ -301,7 +373,7 @@ void MSP_Init()
  Return Value	:	None
  Example Call	:	MSP_SendIdent()
  ***********************************/
-void MSP_SendIdent()
+void MSP_SendIdent(void)
 {
 	msp_txf_ident.version = 233;
 	msp_txf_ident.multitype = 3;
@@ -321,7 +393,7 @@ void MSP_SendIdent()
  Return Value	:	None
  Example Call	:	MSP_SendStatus()
  ***********************************/
-void MSP_SendStatus()
+void MSP_SendStatus(void)
 {
 	msp_txf_status.sensor = 7;
 	msp_txf_status.flag = 42;
@@ -340,7 +412,7 @@ void MSP_SendStatus()
  Return Value	:	None
  Example Call	:	MSP_SendRawIMU()
  ***********************************/
-void MSP_SendRawIMU()
+void MSP_SendRawIMU(void)
 {
 	uint16_t data_length = sizeof(msp_raw_imu);				// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -355,7 +427,7 @@ void MSP_SendRawIMU()
  Return Value	:	None
  Example Call	:	MSP_SendMotor()
  ***********************************/
-void MSP_SendMotor()
+void MSP_SendMotor(void)
 {
 	uint16_t data_length = sizeof(msp_motor);				// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -370,7 +442,7 @@ void MSP_SendMotor()
  Return Value	:	None
  Example Call	:	MSP_SendRC()
  ***********************************/
-void MSP_SendRC()
+void MSP_SendRC(void)
 {
 	uint16_t data_length = sizeof(msp_rc);					// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -385,7 +457,7 @@ void MSP_SendRC()
  Return Value	:	None
  Example Call	:	MSP_SendAttitude()
  ***********************************/
-void MSP_SendAttitude()
+void MSP_SendAttitude(void)
 {
 	uint16_t data_length = sizeof(msp_attitude);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -400,7 +472,7 @@ void MSP_SendAttitude()
  Return Value	:	None
  Example Call	:	MSP_SendAltitude()
  ***********************************/
-void MSP_SendAltitude()
+void MSP_SendAltitude(void)
 {
 	uint16_t data_length = sizeof(msp_altitude);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -415,7 +487,7 @@ void MSP_SendAltitude()
  Return Value	:	None
  Example Call	:	MSP_SendAnalog()
  ***********************************/
-void MSP_SendAnalog()
+void MSP_SendAnalog(void)
 {
 	uint16_t data_length = sizeof(msp_analog);				// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -430,7 +502,7 @@ void MSP_SendAnalog()
  Return Value	:	None
  Example Call	:	MSP_SendRCTuning()
  ***********************************/
-void MSP_SendRCTuning()
+void MSP_SendRCTuning(void)
 {
 	uint16_t data_length = sizeof(msp_rc_tuning);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -445,7 +517,7 @@ void MSP_SendRCTuning()
  Return Value	:	None
  Example Call	:	MSP_SendPID()
  ***********************************/
-void MSP_SendPID()
+void MSP_SendPID(void)
 {
 	uint16_t data_length = sizeof(msp_pid);					// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -460,7 +532,7 @@ void MSP_SendPID()
  Return Value	:	None
  Example Call	:	MSP_SendMisc()
  ***********************************/
-void MSP_SendMisc()
+void MSP_SendMisc(void)
 {
 	uint16_t data_length = sizeof(msp_misc);				// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -475,7 +547,7 @@ void MSP_SendMisc()
  Return Value	:	None
  Example Call	:	MSP_SendMotorPins()
  ***********************************/
-void MSP_SendMotorPins()
+void MSP_SendMotorPins(void)
 {
 	uint16_t data_length = sizeof(msp_motor_pins);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -490,7 +562,7 @@ void MSP_SendMotorPins()
  Return Value	:	None
  Example Call	:	MSP_SendBoxNames()
  ***********************************/
-void MSP_SendBoxNames()
+void MSP_SendBoxNames(void)
 {
 	uint16_t data_length = sizeof(msp_boxnames);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -505,7 +577,7 @@ void MSP_SendBoxNames()
  Return Value	:	None
  Example Call	:	MSP_SendPIDNames()
  ***********************************/
-void MSP_SendPIDNames()
+void MSP_SendPIDNames(void)
 {
 	uint16_t data_length = sizeof(msp_pidnames);			// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -520,7 +592,7 @@ void MSP_SendPIDNames()
  Return Value	:	None
  Example Call	:	MSP_SendBoxIDs()
  ***********************************/
-void MSP_SendBoxIDs()
+void MSP_SendBoxIDs(void)
 {
 	uint16_t data_length = sizeof(msp_boxids);				// Get payload size
 	uint8_t buff[data_length];								// Payload buffer
@@ -535,7 +607,7 @@ void MSP_SendBoxIDs()
  Return Value	:	None
  Example Call	:	MSP_SetRawRC_Callback()
  ***********************************/
-__weak void MSP_SetRawRC_Callback()
+__weak void MSP_SetRawRC_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_RAW_RC);
@@ -550,7 +622,7 @@ __weak void MSP_SetRawRC_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetPID_Callback()
  ***********************************/
-__weak void MSP_SetPID_Callback()
+__weak void MSP_SetPID_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_PID);
@@ -565,7 +637,7 @@ __weak void MSP_SetPID_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetBox_Callback()
  ***********************************/
-__weak void MSP_SetBox_Callback()
+__weak void MSP_SetBox_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_BOX);
@@ -580,7 +652,7 @@ __weak void MSP_SetBox_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetRCTuning_Callback()
  ***********************************/
-__weak void MSP_SetRCTuning_Callback()
+__weak void MSP_SetRCTuning_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_RC_TUNING);
@@ -595,7 +667,7 @@ __weak void MSP_SetRCTuning_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetMisc_Callback()
  ***********************************/
-__weak void MSP_SetMisc_Callback()
+__weak void MSP_SetMisc_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_MISC);
@@ -610,7 +682,7 @@ __weak void MSP_SetMisc_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetHead_Callback()
  ***********************************/
-__weak void MSP_SetHead_Callback()
+__weak void MSP_SetHead_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_HEAD);
@@ -625,7 +697,7 @@ __weak void MSP_SetHead_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetMotor_Callback()
  ***********************************/
-__weak void MSP_SetMotor_Callback()
+__weak void MSP_SetMotor_Callback(void)
 {
 	/* Prevent unused argument(s) compilation warning */
 	UNUSED(MSP_SET_MOTOR);
@@ -640,7 +712,7 @@ __weak void MSP_SetMotor_Callback()
  Return Value	:	None
  Example Call	:	MSP_SetLED_Callback()
  ***********************************/
-void MSP_SetLED_Callback()
+void MSP_SetLED_Callback(void)
 {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, msp_rxf_led.led1);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, msp_rxf_led.led2);

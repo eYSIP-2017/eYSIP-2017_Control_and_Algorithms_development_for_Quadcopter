@@ -1,7 +1,5 @@
-pid.c:59:6:PID_UpdateMSP	16	static
-pid.c:78:6:PID_Compute	24	static
-pid.c:145:6:PID_SetGains	16	static
-pid.c:187:6:PID_Init	20	static
-pid.c:214:6:PID_UpdateGyro	24	static
-pid.c:223:6:PID_UpdateAltitude	16	static
-pid.c:242:6:PID_Update	24	static
+pid.c:92:13:PID_Compute	24	static
+pid.c:166:6:PID_SetGains	16	static
+pid.c:215:6:PID_Init	20	static
+pid.c:273:6:PID_UpdateAltitude	16	static
+pid.c:304:6:PID_Update	24	static

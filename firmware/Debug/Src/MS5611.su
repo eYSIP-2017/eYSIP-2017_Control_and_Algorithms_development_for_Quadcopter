@@ -1,7 +1,7 @@
-MS5611.c:88:17:MS5611_ReadADC	24	static
-MS5611.c:218:7:MS5611_GetTemperature	0	static
-MS5611.c:223:7:MS5611_GetPressure	0	static
-MS5611.c:228:7:MS5611_GetAltitude	0	static
-MS5611.c:233:7:MS5611_GetFilteredAltitude	0	static
-MS5611.c:238:6:MS5611_Update	32	static
-MS5611.c:288:6:MS5611_Init	40	static
+MS5611.c:137:17:MS5611_ReadADC	24	static
+MS5611.c:328:7:MS5611_GetTemperature	0	static
+MS5611.c:340:7:MS5611_GetPressure	0	static
+MS5611.c:352:7:MS5611_GetAltitude	0	static
+MS5611.c:364:7:MS5611_GetFilteredAltitude	0	static
+MS5611.c:377:6:MS5611_Update	32	static
+MS5611.c:434:6:MS5611_Init	40	static

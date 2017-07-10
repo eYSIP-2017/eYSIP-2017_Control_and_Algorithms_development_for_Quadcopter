@@ -12,7 +12,8 @@
 #include "joystick.h"
 #include <string.h>
 
-#define THROTTLE_LIMIT 10
+//#define PID_GUI_DEBUG
+#define THROTTLE_LIMIT 10	// Limit pitch and roll angles
 
 extern msp_set_pid msp_rxf_pid;
 extern msp_set_raw_rc msp_rxf_raw_rc;
@@ -23,6 +24,7 @@ extern PID_TypeDef pid_roll;
 extern PID_TypeDef pid_yaw;
 extern PID_TypeDef pid_altitude;
 
+#ifdef PID_GUI_DEBUG
 typedef struct __attribute__((__packed__))
 {
 	float set_point;
@@ -41,9 +43,18 @@ typedef struct __attribute__((__packed__))
 
 Debug_Buffer dbuff;
 uint8_t debug_buffer[64];
+#endif PID_GUI_DEBUG
 
-void MSP_SetPID_Callback()
+/**********************************
+ Function name	:	MSP_SetPID_Callback
+ Functionality	:	Callback function to handle received PID data
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_SetPID_Callback()
+ ***********************************/
+void MSP_SetPID_Callback(void)
 {
+	/* Scale and update PID gains*/
 	pid_pitch.con_KP = msp_rxf_pid.pitch.p/10.0;
 	pid_pitch.con_KI = msp_rxf_pid.pitch.i/200.0;
 	pid_pitch.con_KD = msp_rxf_pid.pitch.d*4.0;
@@ -55,13 +66,13 @@ void MSP_SetPID_Callback()
 	pid_yaw.con_KP = msp_rxf_pid.yaw.p/10.0;
 	pid_yaw.con_KI = msp_rxf_pid.yaw.i/200.0;
 	pid_yaw.con_KD = msp_rxf_pid.yaw.d*4.0;
-	pid_yaw.set_point = 180;
 
 	pid_altitude.con_KP = msp_rxf_pid.alt.p/10.0;
 	pid_altitude.con_KI = msp_rxf_pid.alt.i/200.0;
 	pid_altitude.con_KD = msp_rxf_pid.alt.d*4.0;
 
-	/** Send ACK */
+	/* Echo PID gains back --> Used with PID-GUI.py */
+#ifdef PID_GUI_DEBUG
 	dbuff.pitch.set_point = pid_pitch.set_point + pid_pitch.offset;
 	dbuff.pitch.kp = pid_pitch.con_KP;
 	dbuff.pitch.ki = pid_pitch.con_KI;
@@ -85,10 +96,20 @@ void MSP_SetPID_Callback()
 	memcpy(debug_buffer, &dbuff, 64);
 	for (int i=0; i<64; i++)
 		serialWrite(debug_buffer[i]);
+#endif PID_GUI_DEBUG
 }
 
-void MSP_SetRawRC_Callback()
+/**********************************
+ Function name	:	MSP_SetRawRC_Callback
+ Functionality	:	Callback function to handle received raw RC data from joystick
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	MSP_SetRawRC_Callback()
+ ***********************************/
+void MSP_SetRawRC_Callback(void)
 {
+	/* Refer wireless joystick control in project documentation (report) */
+
 	// AUX1 - Channel 5 - ARM Drone
 	if (msp_rxf_raw_rc.aux1 > 1600) joystick.MOTOR_ARM = 1;
 	else joystick.MOTOR_ARM = 0;

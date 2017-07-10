@@ -13,11 +13,11 @@
 extern I2C_HandleTypeDef hi2c1;
 
 /**********************************
- Function name	:	IMU_WriteByte
+ Function name	:	I2C_WriteByte
  Functionality	:	To write a byte to a register on the I2C device
- Arguments		:	I2C Device Address, Register Address, Register Value
+ Arguments		:	I2C Device Address, Register Address, Register Value, delay mode
  Return Value	:	None
- Example Call	:	IMU_WriteByte()
+ Example Call	:	I2C_WriteByte(MS5611_ADDRESS, MS5611_CMD_CONV_D1 + MS5611_OSR, 1, 0)
  ***********************************/
 void I2C_WriteByte(uint16_t device_add, uint16_t register_add, uint8_t register_val, uint8_t delay_mode)
 {
@@ -31,11 +31,11 @@ void I2C_WriteByte(uint16_t device_add, uint16_t register_add, uint8_t register_
 }
 
 /**********************************
- Function name	:	IMU_ReadByte
+ Function name	:	I2C_ReadByte
  Functionality	:	To read a byte from a register on the I2C device
- Arguments		:	I2C Device Address, Register Address
+ Arguments		:	I2C Device Address, Register Address, File name, Line number
  Return Value	:	Register value
- Example Call	:	IMU_ReadByte()
+ Example Call	:	I2C_ReadByte(MAG_ADDRESS, MAG_HXL, raw_data, __FILE__, __LINE__)
  ***********************************/
 uint8_t I2C_ReadByte(uint16_t device_add, uint16_t register_add, char* file, int line)
 {
@@ -49,9 +49,9 @@ uint8_t I2C_ReadByte(uint16_t device_add, uint16_t register_add, char* file, int
 /**********************************
  Function name	:	I2C_ReadBytes
  Functionality	:	To read multiple bytes from a register on the I2C device
- Arguments		:	I2C Device Address, Register Address, Buffer, Size
+ Arguments		:	I2C Device Address, Register Address, Buffer, Size, File name, Line number
  Return Value	:	Register value
- Example Call	:	I2C_ReadBytes()
+ Example Call	:	I2C_ReadBytes(MS5611_ADDRESS, MS5611_CMD_ADC_READ, rxbuf, 3, __FILE__, __LINE__)
  ***********************************/
 void I2C_ReadBytes(uint16_t device_add, uint16_t register_add, uint8_t* bytes, uint16_t size, char* file, int line)
 {
@@ -62,11 +62,11 @@ void I2C_ReadBytes(uint16_t device_add, uint16_t register_add, uint8_t* bytes, u
 }
 
 /**********************************
- Function name	:	IMU_ReadByteArray
+ Function name	:	I2C_ReadByteArray
  Functionality	:	To read multiple bytes from series of registers on the I2C device
- Arguments		:	I2C Device Address, Start Register Address, Buffer, Size
+ Arguments		:	I2C Device Address, Start Register Address, Buffer, Size, File name, Line number
  Return Value	:	None
- Example Call	:	IMU_ReadByteArray()
+ Example Call	:	I2C_ReadByteArray(MAG_ADDRESS, MAG_HXL, raw_data, 7, __FILE__, __LINE__)
  ***********************************/
 void I2C_ReadByteArray(uint16_t device_add, uint16_t register_add, uint8_t* byte_array, uint16_t size, char* file, int line)
 {

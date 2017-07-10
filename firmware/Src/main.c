@@ -56,9 +56,6 @@
  * * * * * * * * * * * * * * * * * * * *
  */
 
-/* TODO: Document all libraries */
-/* TODO: Interface voltage sensor */
-
 #include "stm32f1xx_hal.h"
 #include "peripherals.h"
 #include "devices.h"
@@ -72,23 +69,35 @@
 #include "circular_buffer.h"
 #include "main.h"
 
+//#define MULTIWII_CONF
+
 volatile uint32_t last_tick1 = 0, last_tick2 = 0, last_tick3 = 0;
 extern struct txFrame txf;
 extern CircularBuffer rxc, txc;
 
-void taskScheduler()
+/**********************************
+ Function name	:	taskScheduler
+ Functionality	:	To scheduler various tasks in a non-blocking method
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	taskScheduler()
+ ***********************************/
+void taskScheduler(void)
 {
+	// Compute angles
 	if ((millis() - last_tick1) > 1)
 	{
 		/** Save Time */
 		last_tick1 = millis();
 
 		/** Tasks */
+
 		/* Sensor Update */
-		//AK8963_ReadData();
+		//AK8963_ReadData();	// Un-comment for mag calibration
 		AHRS_ComputeAngles();
 	}
 
+	// Compute PID
 	if ((millis() - last_tick3) >= 3)
 	{
 		/** Save Time */
@@ -98,6 +107,7 @@ void taskScheduler()
 		PID_Update();
 	}
 
+	// Telemetry
 	if ((millis() - last_tick2) > 100)
 	{
 		/** Save Time */
@@ -105,26 +115,36 @@ void taskScheduler()
 
 		/** Tasks */
 
-		/* Telemetry */
-		/*MSP_SendIdent();
+		/* MSP Telemetry (NOTE: READ BUG LOG IN DOCUMENTATION REPORT) */
+#ifdef MULTIWII_CONF
+		MSP_SendIdent();
 		MSP_SendStatus();
 		MSP_SendMotor();
 		MSP_SendAttitude();
 		MSP_SendAltitude();
 		MSP_SendRawIMU();
-		MSP_SendPID();*/
-
-		/*txf.x = AHRS_GetPitch();
-		txf.y = AHRS_GetRoll();
-		txf.z = AHRS_GetYaw();
-		sendFrame();*/
+		MSP_SendPID();
+#endif
 	}
 
 	/** Non-blocking tasks */
+
+	// Compute altitude
 	MS5611_Update();
+
+	// Process MSP RX request/command frames (NOTE: READ BUG LOG IN DOCUMENTATION REPORT)
+#ifndef MULTIWII_CONF
 	MSP_Update();
+#endif
 }
 
+/**********************************
+ Function name	:	setup
+ Functionality	:	To initiate all the peripherals and devices
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	setup()
+ ***********************************/
 void setup(void)
 {
 	Devices_Init();
@@ -134,6 +154,13 @@ void setup(void)
 	PID_Init();
 }
 
+/**********************************
+ Function name	:	main
+ Functionality	:	Main function
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	Called automatically by the processor
+ ***********************************/
 int main(void)
 {
 	setup();

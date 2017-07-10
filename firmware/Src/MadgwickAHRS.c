@@ -3,7 +3,7 @@
 
 #define _USE_MATH_DEFINES
 
-volatile float beta, deltat;				// Algorithm gain
+volatile float beta, deltat;				// Algorithm gain and gyro integration time
 float q[4] = { 1.0f, 0.0f, 0.0f, 0.0f };	// Quaternion of sensor frame relative to auxiliary frame
 
 /**********************************
@@ -11,7 +11,7 @@ float q[4] = { 1.0f, 0.0f, 0.0f, 0.0f };	// Quaternion of sensor frame relative 
  Functionality	:	Set beta gain
  Arguments		:	None
  Return Value	:	None
- Example Call	:	MadgwickSetBeta()
+ Example Call	:	MadgwickSetBeta(0.6)
  ***********************************/
 void MadgwickSetBeta(float _beta)
 {
@@ -20,10 +20,10 @@ void MadgwickSetBeta(float _beta)
 
 /**********************************
  Function name	:	MadgwickSetDelta
- Functionality	:	Set integration time delta
+ Functionality	:	Set integration time delta in seconds
  Arguments		:	None
  Return Value	:	None
- Example Call	:	MadgwickSetDelta()
+ Example Call	:	MadgwickSetDelta(0.1)
  ***********************************/
 void MadgwickSetDelta(float _deltat)
 {
@@ -36,10 +36,17 @@ void MadgwickSetDelta(float _deltat)
  	 	 	 	 	which fuses acceleration, rotation rate, and magnetic moments to produce a quaternion-based estimate of absolute
  	 	 	 	 	device orientation -- which can be converted to yaw, pitch, and roll. The performance of the orientation filter
  	 	 	 	 	is at least as good as conventional Kalman-based filtering algorithms but is much less computationally intensive.
+
+ 	 	 	 	 	NOTE:
+ 	 	 	 	 	ACCEL IN G-UNITS
+ 	 	 	 	 	GYRO RATE IN DPS
+ 	 	 	 	 	MAG IN MILLIGAUSS
+
  Arguments		:	Acceleration, gyroscope rates and magnetic moments of all 3 axes
  	 	 	 	 	Array to store computed angles
  Return Value	:	None
- Example Call	:	MadgwickQuaternionUpdate()
+ Example Call	:	MadgwickQuaternionUpdate(-accelData.y, -accelData.x, accelData.z, gyroData.y,
+					gyroData.x, -gyroData.z, magData.x,	magData.y, magData.z, AHRS_Angle)
  ***********************************/
 void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy,
 		float gz, float mx, float my, float mz, float *angle)
@@ -50,6 +57,7 @@ void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy,
 	float s1, s2, s3, s4;
 	float qDot1, qDot2, qDot3, qDot4;
 
+	/* Convert DPS to RPS */
 	gx *= M_PI / 180;
 	gy *= M_PI / 180;
 	gz *= M_PI / 180;
@@ -168,7 +176,7 @@ void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy,
 	q[3] = q4 * norm;
 
 	// Calculate pitch, roll and yaw
-	angle[0] = -asin(2.0f * (q[1] * q[3] - q[0] * q[2])) * 180 / M_PI;
+	angle[0] = asin(2.0f * (q[1] * q[3] - q[0] * q[2])) * 180 / M_PI;
 	angle[1] = atan2(2.0f * (q[0] * q[1] + q[2] * q[3]),
 			q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]) * 180 / M_PI;
 	angle[2] = (atan2(2.0f * (q[1] * q[2] + q[0] * q[3]),

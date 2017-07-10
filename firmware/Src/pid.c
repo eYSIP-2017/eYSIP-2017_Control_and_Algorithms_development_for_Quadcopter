@@ -56,7 +56,14 @@ extern msp_pid msp_txf_pid;
 uint8_t ALT_FLAG = 0;
 uint32_t pid_time = 0;
 
-void PID_UpdateMSP()
+/**********************************
+ Function name	:	PID_UpdateMSP
+ Functionality	:	To update the PID MSP frame
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	PID_UpdateMSP()
+ ***********************************/
+static void PID_UpdateMSP(void)
 {
 	msp_txf_pid.pitch.p = pid_pitch.con_KP * 255;
 	msp_txf_pid.pitch.i = pid_pitch.con_KI * 255;
@@ -75,15 +82,16 @@ void PID_UpdateMSP()
 	msp_txf_pid.alt.d = pid_altitude.con_KD * 255;
 }
 
-void PID_Compute(PID_TypeDef *pid)
+/**********************************
+ Function name	:	PID_Compute
+ Functionality	:	PID control algorithm based on Brett Beauregard's PID library
+ Arguments		:	PID struct instance
+ Return Value	:	None
+ Example Call	:	PID_Compute(&pid_pitch)
+ ***********************************/
+static void PID_Compute(PID_TypeDef *pid)
 {
 	float KP = 0, KI = 0, KD = 0;
-
-	// Check loop time
-	/*pid->time = micros();
-	if ((micros() - pid->last_time) <= pid->delta) return;
-	serialInt(micros() - pid->last_time);
-	serialWrite('\n');*/
 
 	// Compute error
 	pid->error = (pid->set_point + pid->offset) - pid->input;
@@ -101,12 +109,15 @@ void PID_Compute(PID_TypeDef *pid)
 			pid->error = pid->error - (360 * pid->error / abs(pid->error));
 	}
 
+	// Conservative PID gains
 	//if (pid_altitude.output < pid->breakpoint)
 	//{
 		KP = pid->con_KP;
 		KI = pid->con_KI;
 		KD = pid->con_KD;
 	/*}
+
+	// Aggressive PID gains - Not used currently
 	else
 	{
 		KP = pid->agr_KP;
@@ -124,8 +135,11 @@ void PID_Compute(PID_TypeDef *pid)
 	pid->integral = constrain(pid->integral, -PID_LIMIT, PID_LIMIT);
 
 	// Compute derivative term
+#ifndef PID_GYRO
 	pid->derivative = pid->input - pid->last_input;
+#endif
 
+	// Experimental - Use gyro rate instead of computing derivative
 #ifdef PID_GYRO
 	pid->derivative = pid->gyro;
 #endif
@@ -142,6 +156,13 @@ void PID_Compute(PID_TypeDef *pid)
 	pid->last_time  = pid->time;
 }
 
+/**********************************
+ Function name	:	PID_SetGains
+ Functionality	:	To set the PID gains
+ Arguments		:	PID instance macro, conservative and aggressive PID gains
+ Return Value	:	None
+ Example Call	:	PID_SetGains(ROLL, 3.8f, 0.02f, 260.0f, 3.8f, 0.02f, 320.0f)
+ ***********************************/
 void PID_SetGains(int instance, float ckp, float cki, float ckd, float akp, float aki, float akd)
 {
 	switch (instance)
@@ -184,54 +205,88 @@ void PID_SetGains(int instance, float ckp, float cki, float ckd, float akp, floa
 	}
 }
 
-void PID_Init()
+/**********************************
+ Function name	:	PID_Init
+ Functionality	:	To setup the PID algorithm parameters
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	PID_Init()
+ ***********************************/
+void PID_Init(void)
 {
 	/* Set Controller Direction */
 	pid_pitch.direction = DIRECT;
-	pid_roll.direction = REVERSE;
+	pid_roll.direction = DIRECT;
 	pid_yaw.direction = REVERSE;
 	pid_altitude.direction = DIRECT;
 
-	/* Set PID Loop Time */
-	pid_pitch.delta = 5;
+	/* Set PID Loop Time - Not used currently */
+	/*pid_pitch.delta = 5;
 	pid_roll.delta = 5;
 	pid_yaw.delta = 5;
-	pid_altitude.delta = 5;
+	pid_altitude.delta = 5;*/
 
-	/* Set Breakpoint Value */
+	/* Set Breakpoint Value - Border value between conservative and aggressive PID gains */
 	pid_pitch.breakpoint = 1500;
 	pid_roll.breakpoint = 1450;
 	pid_yaw.breakpoint = 2000;
 	pid_altitude.breakpoint = 0;
 
-	/* Set Gains */
+	/* Set PID Gains */
 	PID_SetGains(PITCH, 4.4f, 0.02f, 280.0f, 4.5f, 0.02f, 360.0f);
 	PID_SetGains(ROLL, 3.8f, 0.02f, 260.0f, 3.8f, 0.02f, 320.0f);
 	PID_SetGains(YAW, 3.0f, 0.01f, 280.0f, 0, 0, 0);
 	PID_SetGains(ALT, 10.0f, 0, 0, 0, 0, 0);
 }
 
-void PID_UpdateGyro()
+
+/**********************************
+ Function name	:	PID_UpdateGyro
+ Functionality	:	Experimental - To get gyro rate instead of computing derivative
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	PID_UpdateGyro()
+ ***********************************/
+#ifdef PID_GYRO
+void PID_UpdateGyro(void)
 {
+	// Buffer
 	float gyroData[3];
+
+	// Get gyro rates
 	MPU9250_GetGyroData(gyroData);
+
+	// Update gyro rate in PID instances
 	pid_pitch.gyro = gyroData[0];
 	pid_roll.gyro = gyroData[1];
 	pid_yaw.gyro = gyroData[2];
 }
+#endif
 
-void PID_UpdateAltitude()
+/**********************************
+ Function name	:	PID_UpdateAltitude
+ Functionality	:	To toggle PID between manual throttle control and auto altitude hold modes
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	PID_UpdateAltitude()
+ ***********************************/
+void PID_UpdateAltitude(void)
 {
+	// Enable altitude hold mode
 	if (joystick.ALT_HOLD)
 	{
 		if (ALT_FLAG == 0)
 		{
+			// Start level holding at the current altitude
 			pid_altitude.set_point = MS5611_GetFilteredAltitude()*100;
 			ALT_FLAG = 1;
 		}
+
+		// Feedback input to hold level at the set altitude
 		else pid_altitude.input = MS5611_GetFilteredAltitude()*100;
 	}
 
+	// Manual throttle control mode
 	if (!joystick.ALT_HOLD)
 	{
 		if (ALT_FLAG) ALT_FLAG = 0;
@@ -239,13 +294,24 @@ void PID_UpdateAltitude()
 	}
 }
 
-void PID_Update()
+/**********************************
+ Function name	:	PID_Update
+ Functionality	:	To update the PID input values, compute outputs and update motors
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	PID_Update()
+ ***********************************/
+void PID_Update(void)
 {
+	// Update PID inputs
 	pid_pitch.input = AHRS_GetPitch();
 	pid_roll.input = AHRS_GetRoll();
 	pid_yaw.input = AHRS_GetYaw();
+
+	// Update altitude PID input
 	PID_UpdateAltitude();
 
+	// Serial PID debug to check input angles
 #ifdef PID_DEBUG
 	serialInt(pid_pitch.input);
 	serialWrite('\t');
@@ -255,9 +321,10 @@ void PID_Update()
 	serialWrite('\t');
 #endif
 
-	/* Emergency Power Down */
+	/* Emergency Power Down  for angles greater than 80 degrees */
 	if ((abs(pid_pitch.input) > 80) || (abs(pid_roll.input) > 80))
 	{
+		// Stop motors for safety
 		Motor_StopAll();
 		toggleLED(0, 1, 0);
 		return;
@@ -278,10 +345,12 @@ void PID_Update()
 	//pid_pitch.output = 0;
 	//pid_roll.output = 0;
 	//pid_yaw.output = 0;
-	pid_altitude.output = joystick.throttle;
-	//Motor_DistributeSpeed(pid_altitude.output, pid_pitch.output, pid_roll.output, pid_yaw.output);
+	pid_altitude.output = joystick.throttle; // Currently in manual mode
 
+	// If drone is armed, update motor PWM values
 	if (joystick.MOTOR_ARM) Motor_DistributeSpeed(pid_altitude.output, pid_pitch.output, pid_roll.output, pid_yaw.output);
 	else Motor_StopAll();
-	//PID_UpdateMSP();
+
+	// Update PID MSP frame
+	PID_UpdateMSP();
 }

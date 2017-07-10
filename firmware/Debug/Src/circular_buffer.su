@@ -1,4 +1,4 @@
-circular_buffer.c:13:5:CB_Write	0	static
-circular_buffer.c:23:5:CB_Read	0	static
-circular_buffer.c:33:10:CB_Size	0	static
-circular_buffer.c:38:6:CB_Init	0	static
+circular_buffer.c:20:5:CB_Write	0	static
+circular_buffer.c:45:5:CB_Read	0	static
+circular_buffer.c:70:10:CB_Size	0	static
+circular_buffer.c:82:6:CB_Init	0	static

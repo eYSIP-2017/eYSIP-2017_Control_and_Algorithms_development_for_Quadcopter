@@ -1,7 +1,4 @@
-motor.c:44:6:Motor_UpdateMSP	0	static
-motor.c:63:6:Motor_UpdatePWM	8	static
-motor.c:73:6:Motor_StopAll	8	static
-motor.c:81:6:Motor_SetRawSpeed	4	static
-motor.c:91:6:Motor_SetSpeed	4	static
-motor.c:101:6:Motor_DistributeSpeed	32	static
-motor.c:120:6:MSP_SetMotor_Callback	24	static
+motor.c:97:6:Motor_StopAll	8	static
+motor.c:112:6:Motor_SetSpeed	8	static
+motor.c:130:6:Motor_DistributeSpeed	32	static
+motor.c:150:6:MSP_SetMotor_Callback	24	static

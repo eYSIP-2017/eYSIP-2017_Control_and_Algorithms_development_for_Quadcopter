@@ -10,6 +10,7 @@
 #include "devices.h"
 #include "timing.h"
 
+// PWM <--> Motor thrust calibration
 #define MOTOR1_SCALE 1
 #define MOTOR2_SCALE 1
 #define MOTOR3_SCALE 1
@@ -21,7 +22,13 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 
-/* led -> LED Number, val -> Digital output value */
+/**********************************
+ Function name	:	toggleLED
+ Functionality	:	To toggle the different LEDs
+ Arguments		:	LED logic values
+ Return Value	:	None
+ Example Call	:	toggleLED(1, 0 1)
+ ***********************************/
 void toggleLED(int led_white, int led_red, int led_blue)
 {
 	HAL_GPIO_WritePin(White_LED_GPIO_Port, White_LED_Pin, !led_white);
@@ -29,8 +36,14 @@ void toggleLED(int led_white, int led_red, int led_blue)
 	HAL_GPIO_WritePin(Blue_LED_GPIO_Port, Blue_LED_Pin, !led_blue);
 }
 
-/* LED sequence on reset */
-void LED_StartupSequence()
+/**********************************
+ Function name	:	LED_StartupSequence
+ Functionality	:	LED sequence on reset
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	LED_StartupSequence()
+ ***********************************/
+void LED_StartupSequence(void)
 {
 	for (int i=0; i<3; i++)
 	{
@@ -52,7 +65,7 @@ void LED_StartupSequence()
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor1_SetPWM()
+ Example Call	:	Motor1_SetPWM(500)
  ***********************************/
 void Motor1_SetPWM(int pwm)
 {
@@ -65,7 +78,7 @@ void Motor1_SetPWM(int pwm)
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor2_SetPWM()
+ Example Call	:	Motor2_SetPWM(500)
  ***********************************/
 void Motor2_SetPWM(int pwm)
 {
@@ -78,7 +91,7 @@ void Motor2_SetPWM(int pwm)
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor3_SetPWM()
+ Example Call	:	Motor3_SetPWM(500)
  ***********************************/
 void Motor3_SetPWM(int pwm)
 {
@@ -91,7 +104,7 @@ void Motor3_SetPWM(int pwm)
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor4_SetPWM()
+ Example Call	:	Motor4_SetPWM(500)
  ***********************************/
 void Motor4_SetPWM(int pwm)
 {
@@ -104,7 +117,7 @@ void Motor4_SetPWM(int pwm)
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor5_SetPWM()
+ Example Call	:	Motor5_SetPWM(500)
  ***********************************/
 void Motor5_SetPWM(int pwm)
 {
@@ -116,7 +129,7 @@ void Motor5_SetPWM(int pwm)
  Functionality	:	Set PWM value for the motor
  Arguments		:	PWM Value (0-1000)
  Return Value	:	None
- Example Call	:	Motor6_SetPWM()
+ Example Call	:	Motor6_SetPWM(500)
  ***********************************/
 void Motor6_SetPWM(int pwm)
 {
@@ -152,7 +165,7 @@ void PWM_Init(void)
 /**********************************
  Function name	:	Devices_Init
  Functionality	:	To initialize all devices and peripherals
- Arguments		:	PWM Value (0-1000)
+ Arguments		:	None
  Return Value	:	None
  Example Call	:	Devices_Init()
  ***********************************/
@@ -162,4 +175,3 @@ void Devices_Init(void)
 	PWM_Init();
 	LED_StartupSequence();
 }
-

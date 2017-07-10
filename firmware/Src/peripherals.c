@@ -412,17 +412,18 @@ void _Error_Handler(char * file, int line)
 	while (1)
 	{
 		// Blink Error LEDs
-		//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 		HAL_GPIO_TogglePin(Red_LED_GPIO_Port, Red_LED_Pin);
 		HAL_GPIO_TogglePin(White_LED_GPIO_Port, White_LED_Pin);
 		HAL_GPIO_TogglePin(Blue_LED_GPIO_Port, Blue_LED_Pin);
 
+		// Print file name and line number to serial terminal
 		serialPrint("Error with ");
 		serialPrint(file);
 		serialPrint(" at line: ");
 		serialInt(line);
 		serialWrite('\n');
 
+		// Delay to avoid terminal from hanging
 		delay_ms(500);
 	}
 }

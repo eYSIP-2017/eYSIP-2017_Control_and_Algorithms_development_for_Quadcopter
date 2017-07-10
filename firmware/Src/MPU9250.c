@@ -5,8 +5,6 @@
  *      Author: Heethesh
  */
 
-/* TODO: Implement MSP for all IMU data and Attitude */
-
 #include "stm32f1xx_hal.h"
 #include "peripherals.h"
 #include "msp.h"
@@ -36,8 +34,8 @@ struct IMUData
 	float x;
 	float y;
 	float z;
-}accelData, gyroData, magData, magCalib, magBias = {94.251, 513.113, -336.519},
-gyroBias = {0.084, 0.132, 0.019}, magScale = {1.019, 0.991, 0.991};
+}accelData, gyroData, magData, magCalib, magBias = {251.335, 437.810, -456.283},
+gyroBias = {0.084, 0.132, 0.019}, magScale = {1.021, 0.983, 0.997};
 
 struct IMURaw
 {
@@ -55,7 +53,7 @@ struct LPF lpf_pitch = {0, 0.7}, lpf_roll = {0, 0.7}, lpf_yaw = {0, 0};
  Return Value	:	None
  Example Call	:	MPU9250_Init()
  ***********************************/
-void MPU9250_Init()
+void MPU9250_Init(void)
 {
 	// Verify device
 	uint8_t data = I2C_ReadByte(MPU9250_ADDRESS, WHO_AM_I, __FILE__, __LINE__);
@@ -76,12 +74,12 @@ void MPU9250_Init()
 
 /**********************************
  Function name	:	MPU9250_ReadAccelData
- Functionality	:	To read the raw data from the accelerometer and convert it Gs
+ Functionality	:	To read the raw data from the accelerometer and convert it G-units
  Arguments		:	None
  Return Value	:	None
  Example Call	:	MPU9250_ReadAccelData()
  ***********************************/
-void MPU9250_ReadAccelData()
+void MPU9250_ReadAccelData(void)
 {
 	// Data buffer
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0};
@@ -89,11 +87,12 @@ void MPU9250_ReadAccelData()
 	// Read raw data
 	I2C_ReadByteArray(MPU9250_ADDRESS, ACCEL_XOUT_H, raw_data, 6, __FILE__, __LINE__);
 
-	// Convert and store it
+	// Pack to integer
 	accelRaw.x = (int16_t) ((raw_data[0]<<8) | raw_data[1]);
 	accelRaw.y = (int16_t) ((raw_data[2]<<8) | raw_data[3]);
 	accelRaw.z = (int16_t) ((raw_data[4]<<8) | raw_data[5]);
 
+	// Scale to G-units
 	accelData.x = (float) accelRaw.x * 4.0f/32768.0f;
 	accelData.y = (float) accelRaw.y * 4.0f/32768.0f;
 	accelData.z = (float) accelRaw.z * 4.0f/32768.0f;
@@ -115,7 +114,7 @@ void MPU9250_ReadAccelData()
  Return Value	:	None
  Example Call	:	MPU9250_ReadGyroData()
  ***********************************/
-void MPU9250_ReadGyroData()
+void MPU9250_ReadGyroData(void)
 {
 	// Data buffer
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0};
@@ -123,11 +122,12 @@ void MPU9250_ReadGyroData()
 	// Read raw data
 	I2C_ReadByteArray(MPU9250_ADDRESS, GYRO_XOUT_H, raw_data, 6, __FILE__, __LINE__);
 
-	// Convert and store it
+	// Pack to integer
 	gyroRaw.x = (int16_t) ((raw_data[0]<<8) | raw_data[1]);
 	gyroRaw.y = (int16_t) ((raw_data[2]<<8) | raw_data[3]);
 	gyroRaw.z = (int16_t) ((raw_data[4]<<8) | raw_data[5]);
 
+	// Scale to DPS
 	gyroData.x = ((float) gyroRaw.x * 1000.0f/32768.0f) - gyroBias.x;
 	gyroData.y = ((float) gyroRaw.y * 1000.0f/32768.0f) - gyroBias.y;
 	gyroData.z = ((float) gyroRaw.z * 1000.0f/32768.0f) - gyroBias.z;
@@ -163,7 +163,7 @@ void MPU9250_GetGyroData(float* data)
  Return Value	:	None
  Example Call	:	AK8963_Init()
  ***********************************/
-void AK8963_Init()
+void AK8963_Init(void)
 {
 	// Enable access to Magnetometer via MPU
 	I2C_WriteByte(MPU9250_ADDRESS, INT_PIN_CFG, 0x22, 1);	// Set bypass mode for external I2C master connection
@@ -177,14 +177,14 @@ void AK8963_Init()
 	I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x00, 1);		// Power down magnetometer
 	I2C_WriteByte(MAG_ADDRESS, MAG_CNTL1, 0x0F, 1); 	// Enter Fuse ROM access mode
 
-	// Read calibration registers
+	// Read factory calibration registers
 	uint8_t rawData[3];
 	I2C_ReadByteArray(MAG_ADDRESS, MAG_ASAX, rawData, 3, __FILE__, __LINE__);
 
 	// Calibrate magnetometer factory offset
-	magCalib.x =  (float)(rawData[0] - 128)/256.0f + 1.0f;   // Return x-axis sensitivity adjustment values
-	magCalib.y =  (float)(rawData[1] - 128)/256.0f + 1.0f;
-	magCalib.z =  (float)(rawData[2] - 128)/256.0f + 1.0f;
+	magCalib.x =  (float)(rawData[0] - 128)/256.0f + 1.0f;	// Return x-axis sensitivity adjustment values
+	magCalib.y =  (float)(rawData[1] - 128)/256.0f + 1.0f;	// Return y-axis sensitivity adjustment values
+	magCalib.z =  (float)(rawData[2] - 128)/256.0f + 1.0f;	// Return z-axis sensitivity adjustment values
 
 #ifdef IMU_DEBUG
 	serialFloat(magCalib.x);
@@ -207,7 +207,7 @@ void AK8963_Init()
  Return Value	:	None
  Example Call	:	AK8963_ReadData()
  ***********************************/
-void AK8963_ReadData()
+void AK8963_ReadData(void)
 {
 	uint8_t raw_data[] = {0, 0, 0, 0, 0, 0, 0};
 
@@ -221,7 +221,7 @@ void AK8963_ReadData()
 		// Store data if no overflow occurred
 		if (!(OVF & 0x08))
 		{
-			// Pack into 16-bit data
+			// Pack into 16-bit integer
 			magRaw.x = (int16_t) ((raw_data[1]<<8) | raw_data[0]);
 			magRaw.y = (int16_t) ((raw_data[3]<<8) | raw_data[2]);
 			magRaw.z = (int16_t) ((raw_data[5]<<8) | raw_data[4]);
@@ -256,7 +256,7 @@ void AK8963_ReadData()
  Return Value	:	None
  Example Call	:	IMU_Init()
  ***********************************/
-void IMU_Init()
+void IMU_Init(void)
 {
 	MPU9250_Init();
 	AK8963_Init();
@@ -264,6 +264,8 @@ void IMU_Init()
 	//float GyroMeasError = M_PI * (60.0f / 180.0f);	// Gyroscope measurement error in rads/s (start at 60 deg/s), then reduce after ~10 s to 3
 	//float beta = sqrt(3.0f / 4.0f) * GyroMeasError;	// Compute beta
 
+	// Higher the beta value, depends more on noisy readings from accelerometer, faster response
+	// Lower the value, smooth readings, but slower response
 	MadgwickSetBeta(0.6f);
 	MadgwickSetDelta(0.0f);
 }
@@ -275,7 +277,7 @@ void IMU_Init()
  Return Value	:	Pitch angle
  Example Call	:	AHRS_GetPitch()
  ***********************************/
-float AHRS_GetPitch()
+float AHRS_GetPitch(void)
 {
 	return lowPassFilter(&lpf_pitch, AHRS_Angle[1]);
 }
@@ -287,7 +289,7 @@ float AHRS_GetPitch()
  Return Value	:	Roll angle
  Example Call	:	AHRS_GetRoll()
  ***********************************/
-float AHRS_GetRoll()
+float AHRS_GetRoll(void)
 {
 	return lowPassFilter(&lpf_roll, AHRS_Angle[0]);
 }
@@ -299,7 +301,7 @@ float AHRS_GetRoll()
  Return Value	:	Yaw angle
  Example Call	:	AHRS_GetYaw()
  ***********************************/
-float AHRS_GetYaw()
+float AHRS_GetYaw(void)
 {
 	// Shift range to North heading
 	float angle = AHRS_Angle[2];
@@ -314,14 +316,14 @@ float AHRS_GetYaw()
  Return Value	:	None
  Example Call	:	AHRS_ComputeAngles()
  ***********************************/
-void AHRS_ComputeAngles()
+void AHRS_ComputeAngles(void)
 {
-	// Read IMU data
+	// Read converted IMU data
 	MPU9250_ReadAccelData();
 	MPU9250_ReadGyroData();
 	AK8963_ReadData();
 
-	// Set integration time by time elapsed since last filter update
+	// Set integration time by time elapsed since last filter update in seconds
 	AHRS_timeNow = micros();
 	float delta = (float)((AHRS_timeNow - AHRS_lastUpdate)/1000.0f) ;
 	MadgwickSetDelta(delta);
@@ -330,6 +332,8 @@ void AHRS_ComputeAngles()
 	// Filter data and obtain the angles
 	MadgwickQuaternionUpdate(-accelData.y, -accelData.x, accelData.z, gyroData.y,
 			gyroData.x, -gyroData.z, magData.x,	magData.y, magData.z, AHRS_Angle);
+
+	/* Update MSP frame */
 
 	// Update raw IMU MSP frame
 	msp_txf_raw_imu.accx = accelRaw.x / 100;

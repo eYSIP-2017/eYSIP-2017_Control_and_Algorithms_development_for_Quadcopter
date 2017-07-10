@@ -5,7 +5,7 @@
  *      Author: Heethesh
  */
 
-/* Library deprecated, use MSP */
+/* Library deprecated, use MSP Debug Frame*/
 
 #include <serial.h>
 #include "telemetry.h"
@@ -13,7 +13,16 @@
 
 struct txFrame txf;
 
-void sendFrame()
+/**********************************
+ Function name	:	sendFrame
+ Functionality	:	To send a frame of data
+ 	 	 	 	 	Format '<' <DATA> <CRC> '>'
+ 	 	 	 	 	Use MultiWii Serial Protocol debug frames, this method is deprecated
+ Arguments		:	None
+ Return Value	:	None
+ Example Call	:	sendFrame()
+ ***********************************/
+void sendFrame(void)
 {
 	unsigned char checksum = 0;
 	unsigned char txBuffer[12];
@@ -24,7 +33,7 @@ void sendFrame()
 	// Convert struct elements to byte array
 	memcpy(txBuffer, &txf, 12);
 
-	// Transmit data payload
+	// Transmit data payload and update checksum
 	for (int i=0; i<12; i++)
 	{
 		checksum ^= txBuffer[i];
@@ -32,7 +41,6 @@ void sendFrame()
 	}
 
 	// Calculate checksum
-	//checksum = 0xFF - (0xFF & (unsigned char)checksum);
 	serialWrite(checksum);
 
 	// End frame limiter
