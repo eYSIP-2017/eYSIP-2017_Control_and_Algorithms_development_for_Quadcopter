@@ -127,7 +127,7 @@ Pluto Drone by Drona Aviation
 
 \chapter[Introduction]{Introduction}
 \section{Abstract}
-The project deals with the study of control algorithms and to develop a custom firmware for quadcopter (flight controller) on 32-bit micro-controllers such as the STM32F1xx (ARM® Cortex®-M3 core). The flight controller is designed to control parameters such as the throttle, yaw, pitch and roll and consists of algorithms considering various motion and dynamics. The next step is to analyze the control algorithm to identify effects of various parameters and to optimize it for stable motion. The final step is to develop a wireless joystick controller for simple maneuvering of the quadcopter. 
+The project deals with the study of control algorithms and to develop a custom firmware for quadcopter (flight controller) on 32-bit micro-controllers such as the STM32F1xx (ARM\textsuperscript{\textregistered} Cortex\textsuperscript{\textregistered}-M3 core). The flight controller is designed to control parameters such as the throttle, yaw, pitch and roll and consists of algorithms considering various motion and dynamics. The next step is to analyze the control algorithm to identify effects of various parameters and to optimize it for stable motion. The final step is to develop a wireless joystick controller for simple maneuvering of the quadcopter. 
 
 \section{Completion Status}
 \begin{enumerate}
@@ -153,7 +153,7 @@ The project deals with the study of control algorithms and to develop a custom f
 %-------------------------------------------------------------------------------
 
 \chapter[Hardware]{Hardware}
-One of the goals of the project is to develop a firmware for 32-bit micro-controllers. The micro-controller used in this project is the STM32F103 (ARM Cortex-M3 Core). Initially the firmware development was carried out on the Nucleo Development Board. The quadcopter, used in the later stage, is the Pluto Drone, provided by Drona Aviation. The following section lists all the hardware components used in this project along with its specifications.
+One of the goals of the project is to develop a firmware for 32-bit micro-controllers. The micro-controller used in this project is the STM32F103 (ARM\textsuperscript{\textregistered} Cortex\textsuperscript{\textregistered}-M3 Core). Initially the firmware development was carried out on the Nucleo Development Board. The quadcopter, used in the later stage, is the Pluto Drone, provided by Drona Aviation. The following section lists all the hardware components used in this project along with its specifications.
 
 \section{List of Hardware Components}
 \begin{itemize}
@@ -189,9 +189,9 @@ One of the goals of the project is to develop a firmware for 32-bit micro-contro
 \end{itemize}
 
 \section{STM32 Micro-controller}
-The STM32 family of micro-controllers, based upon the ARM Cortex-M3 core, provides a foundation for building a vast range of embedded systems from simple battery powered dongles to complex real-time systems such as helicopter autopilots. This component family provides wide-ranging choices in memory sizes, available peripherals, performance, and power. Unfortunately, power and flexibility are achieved at a cost – software development for the STM32 family can be extremely challenging for the uninitiated with a vast array of documentation and software libraries to wade through.\cite{geob} \\
+The STM32 family of micro-controllers, based upon the ARM\textsuperscript{\textregistered} Cortex\textsuperscript{\textregistered}-M3 core, provides a foundation for building a vast range of embedded systems from simple battery powered dongles to complex real-time systems such as helicopter autopilots. This component family provides wide-ranging choices in memory sizes, available peripherals, performance, and power. Unfortunately, power and flexibility are achieved at a cost – software development for the STM32 family can be extremely challenging for the uninitiated with a vast array of documentation and software libraries to wade through.\cite{geob} \\
 
-The STM32F103xx medium-density performance line family incorporates the high-performance ARM Cortex-M3 32-bit RISC core operating at a 72 MHz frequency, high-speed embedded memories (Flash memory up to 128 Kbytes and SRAM up to 20 Kbytes), and an extensive range of enhanced I/Os and peripherals connected to two APB buses. All devices offer two 12-bit ADCs, three general purpose 16-bit timers plus one PWM timer, as well as standard and advanced communication interfaces: up to two I2Cs and SPIs, three USARTs, an USB and a CAN.\cite{stm32}
+The STM32F103xx medium-density performance line family incorporates the high-performance ARM\textsuperscript{\textregistered} Cortex\textsuperscript{\textregistered}-M3 32-bit RISC core operating at a 72 MHz frequency, high-speed embedded memories (Flash memory up to 128 Kbytes and SRAM up to 20 Kbytes), and an extensive range of enhanced I/Os and peripherals connected to two APB buses. All devices offer two 12-bit ADCs, three general purpose 16-bit timers plus one PWM timer, as well as standard and advanced communication interfaces: up to two I2Cs and SPIs, three USARTs, an USB and a CAN.\cite{stm32}
 
 \begin{figure}[!htb]
 \centering
@@ -238,7 +238,7 @@ Another method of flashing the program is by using the built-in UART Bootloader.
 
 Programming the STM32 series micro-controllers is done in various layers namely, CMSIS, HAL, BSP and Application code. The software stack is shown in \textit{\autoref{fig:software_stack}}.\\
 
-The \textit{Cortex Micro-controller Software Interface Standard (CMSIS)} supports developers in creating reusable software components for ARM Cortex-M based systems. It mostly contains definitions for the various registers.\\
+The \textit{Cortex\textsuperscript{\textregistered} Micro-controller Software Interface Standard (CMSIS)} supports developers in creating reusable software components for ARM Cortex-M based systems. It mostly contains definitions for the various registers.\\
 
 The \textit{Hardware Abstraction Layer (HAL)} drivers were designed to offer a rich set of APIs and to interact easily with the application upper layers. Each driver consists of a set of functions covering the most common peripheral features such as GPIO, UART, I2C, CAN and so on.\cite{stm32hal}\\
 
@@ -684,7 +684,7 @@ A trivial problem that follows this is a standard and a secure method of data tr
 
 \textbf{Checksum} | This is a simple method to keep the communication secure. Checksum is calculated by XORing the code, data length and all the bytes of the payload. When a frame is received the checksum must be calculated locally (on the micro-controller) and must be compared with the checksum received in the frame. A mismatch would indicate an error in the communication and the frame can be discarded.\\
 
-The entire list of MSP codes and frame/payload format can be found \href{http://www.multiwii.com/wiki/index.php?title=Multiwii_Serial_Protocol}{here}. \autoref{fig:msp} shows the possible frame formats.\\
+The entire list of MSP codes and frame/payload format can be found \href{http://www.multiwii.com/wiki/index.php?title=Multiwii_Serial_Protocol}{here}. \textit{\autoref{fig:msp}} shows the possible frame formats.\\
 
 \begin{figure}[!htb]
 \centering
@@ -970,7 +970,7 @@ void MSP_SetMotor_Callback()
 \section{Wireless Joystick Controller}
 \label{sec:joystick}
 
-To pilot the quadcopter and to control the various flight parameters, a joystick controller is required. In this project, the Xbox\textsuperscript{\textregistered}} One Controller\cite{xbox} is used. this controller is a USB-HID Gamepad compliant device and is interfaced with Python with the help \textit{pygame} module. The inputs from the controller are read, parsed, converted and then packed into MSP frames and sent to the quadcopter. The communication process is same as explained in \textit{\autoref{ssec:serial}}.\\
+To pilot the quadcopter and to control the various flight parameters, a joystick controller is required. In this project, the Xbox\textsuperscript{\textregistered} One Controller\cite{xbox} is used. this controller is a USB-HID Gamepad compliant device and is interfaced with Python with the help of \textit{pygame} module. The inputs from the controller are read, parsed, converted and then packed into MSP frames and sent to the quadcopter. The communication process is same as explained in \textit{\autoref{ssec:serial}}.\\
 
 \begin{figure}[!htb]
 \centering
@@ -984,7 +984,7 @@ To use the joystick controller, just plug in the controller to any USB port and 
 \section{Results and Demonstration}
 The IMU and magnetometer were successfully interfaced and fused using AHRS filter to get the attitude and heading. The barometer was also interfaced and altitude was estimated.\\
 
-MultiWii Serial Protocol (MSP) was successfully implemented in the firmware and \textit{\autoref{fig:msp_conf}} shows the data obtained from the flight controller. Flight parameters and data like attitude, heading, altitude, motor PWM values, raw IMU data, PID gains and several other data was obtained and visualized in MultiWii Conf, which is open source software written in \textit{Processing}. This is the \textit{link} for the video demonstration of the same.\\
+MultiWii Serial Protocol (MSP) was successfully implemented in the firmware and \textit{\autoref{fig:msp_conf}} shows the data obtained from the flight controller. Flight parameters and data like attitude, heading, altitude, motor PWM values, raw IMU data, PID gains and several other data was obtained and visualized in MultiWii Conf, which is open source software written in \textit{Processing}. This is the \href{https://youtu.be/W6h0ePuQfjE}{link} for the video demonstration of the same.\\
 
 \begin{figure}[!htb]
 \centering
@@ -997,7 +997,7 @@ MultiWii Serial Protocol (MSP) was successfully implemented in the firmware and 
 
 Fine tuning PID values of a quadcopter flight controller can be very devious and time consuming process if a programmer needs to adjust parameters in source code, compile it and upload the new program to copter every time they want to make a slight adjustment. To make the process of PID tuning easier, a GUI in Python was developed.\\
 
-This GUI helps in tuning the pitch, roll, yaw and throttle axes. MSP is used for communication with the quadcopter. Apart from setting PID gains, one can set the trim for any axis or change the set point. Throttle value can also be set. Various MSP frames such as status, identifier and raw IMU data can also be requested from the drone through this GUI. This is the \textit{link} for the video demonstration of the PID tuning process using the GUI.\\ 
+This GUI helps in tuning the pitch, roll, yaw and throttle axes. MSP is used for communication with the quadcopter. Apart from setting PID gains, one can set the trim for any axis or change the set point. Throttle value can also be set. Various MSP frames such as status, identifier and raw IMU data can also be requested from the drone through this GUI. This is the \href{https://youtu.be/YL5i_DfhHuk}{link} for the video demonstration of the PID tuning process using the GUI.\\ 
 
 \begin{figure}[!htb]
 \centering
@@ -1008,7 +1008,7 @@ This GUI helps in tuning the pitch, roll, yaw and throttle axes. MSP is used for
 
 \clearpage
 
-The joystick controller was successfully interfaced with Python using the \textit{pygame} module. A CLI in Python was developed to visualize the joystick controls as shown in \textit{\autoref{fig:xbox_cli}}. The various controls supported are shown in \textit{\autoref{fig:joycon}}. Vibration feedback from the joystick to the user is also implemented. This is the \textit{link} for the video demonstration of the joystick controller interfaced.\\
+The joystick controller was successfully interfaced with Python using the \textit{pygame} module. A CLI in Python was developed to visualize the joystick controls as shown in \textit{\autoref{fig:xbox_cli}}. The various controls supported are shown in \textit{\autoref{fig:joycon}}. Vibration feedback from the joystick to the user is also implemented. This is the \href{https://youtu.be/l0V4xfjGFts}{link} for the video demonstration of the joystick controller interfaced.\\
 
 \begin{figure}[!htb]
 \centering
@@ -1019,7 +1019,7 @@ The joystick controller was successfully interfaced with Python using the \texti
 
 \bigskip
 
-The PID gains were tuned for pitch, roll and yaw axes and the drone response was quick and stable for each of the axes individually. However, when PID for all three axes was enabled, there were slight offsets due to shift in CG. Successful flight was achieved upto a height of \SI{5}{\m}. However, due to certain offsets, the drone drifts quite a lot in the pitch and roll axis and the flight is not very stable. This is the \textit{link} for the video demonstration of the quadcopter flight.\\
+The PID gains were tuned for pitch, roll and yaw axes and the drone response was quick and stable for each of the axes individually. However, when PID for all three axes was enabled, there were slight offsets due to shift in CG. Successful flight was achieved upto a height of \SI{5}{\m}. However, due to certain offsets, the drone drifts quite a lot in the pitch and roll axis and the flight is not very stable. This is the \href{https://youtu.be/p4aTLVsBq5Q}{link} for the video demonstration of the quadcopter flight.\\
 
 \chapter[Future Work]{Future Work}
 A flight controller firmware is a very complex one as it has to support various hardware devices and should be designed in a way such that the addition of new hardware or expansion in functionality must be an easy process. For example, if a new module such as GPS or XBee communication is required, such a change must easily be able to be incorporated into the the current firmware.\\
@@ -1135,7 +1135,7 @@ Sebastian O.H. Madgwick, \href{./datasheets/Madgwick Internal Report.pdf}{\texti
 V. Kadamatt, \href{http://www.droneybee.com/quadcopter-blade-rotation-lift/}{\textit{Quadcopter blade rotation and lift : How and why}}
 
 \bibitem{xbox}
-Xbox\textsuperscript{\textregistered} One is a trademark of Microsoft Corporation. The Xbox\textsuperscript{\textregistered} Logos are trademarks of Microsoft\textsuperscript{\textregistered} Corporation.
+Xbox\textsuperscript{\textregistered} One is a trademark of Microsoft\textsuperscript{\textregistered} Corporation. The Xbox\textsuperscript{\textregistered} Logos are trademarks of Microsoft\textsuperscript{\textregistered} Corporation.
 
 \end{thebibliography}
 
