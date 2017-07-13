@@ -1,5 +1,5 @@
 ## eYSIP-2017 Control and Algorithms Development for Quadcopter
-### Intoduction
+### Introduction
 The project deals with the study of control algorithms for Quadcopter. The goal is to develop firmwares for Quadcopter, to control parameters such as the throttle, yaw, pitch and roll and to develop algorithms considering various motion and dynamics. The next step is to analyse the control algorihtm to identify effects of various parameters and to optimise it for stable motion.  
 
 ### Project Details
